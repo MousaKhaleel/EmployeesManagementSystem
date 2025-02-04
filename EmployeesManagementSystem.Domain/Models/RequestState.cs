@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 
 namespace EmployeesManagementSystem.Domain.Models
 {
-	public class Position
+	public class RequestState
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int PositionId { get; set; }
+		public int StateId { get; set; }
 
-		[Required, MaxLength(30)]
-		public string PositionName { get; set; }
-		public ICollection<Employee>? Employees { get; set; }
+		[Required, MaxLength(10)]
+		public string StateName { get; set; }
+
+		public ICollection<VacationRequest>? VacationRequests { get; set; }
 	}
 }
