@@ -61,9 +61,9 @@ namespace EmployeesManagementSystem.Domain.Services
 
 		public async Task<Employee> GetEmployeeProfileAsync()
 		{
-			var userId = _userManager.GetUserId(User);
-			var result = await _employeeRepository.GetByIdAsync(userId);
-			throw new NotImplementedException();
+			//var userId = _userManager.GetUserId(User);
+			var result = await _employeeRepository.GetByIdAsync(1);//TODO: fix temp
+			return result;
 		}
 	}
 }

@@ -1,6 +1,12 @@
+using EmployeesManagementSystem.Domain.Interfaces;
+using EmployeesManagementSystem.Domain.Models;
 using EmployeesManagementSystem.Infrastructure.Data;
+using EmployeesManagementSystem.Infrastructure.Repositories;
+using EmployeesManagementSystem.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Numerics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +19,22 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<Employee, IdentityRole>(
+	options =>
+	{
+		//temp for dev
+		options.Password.RequiredUniqueChars = 0;
+		options.Password.RequireUppercase = false;
+		options.Password.RequireLowercase = false;
+		options.Password.RequiredLength = 8;
+		options.Password.RequireNonAlphanumeric = false;
+	})
+	.AddRoles<IdentityRole>()
+	.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
 

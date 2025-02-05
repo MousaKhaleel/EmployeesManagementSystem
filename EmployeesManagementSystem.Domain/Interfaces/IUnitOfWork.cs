@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmployeesManagementSystem.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace EmployeesManagementSystem.Domain.Interfaces
 {
 	public interface IUnitOfWork : IDisposable
 	{
-		IGenericRepository<>
+		IGenericRepository<Employee> employeeRepository { get; }
 	}
 }

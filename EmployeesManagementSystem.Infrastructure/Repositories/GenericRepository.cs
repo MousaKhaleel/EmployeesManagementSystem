@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EmployeesManagementSystem.Infrastructure.Repositories
 {
-	internal class GenericRepository<T> : IGenericRepository<T> where T : class
+	public class GenericRepository<T> : IGenericRepository<T> where T : class
 	{
 		private readonly ApplicationDbContext _context;
 		private readonly DbSet<T> _dbSet;
@@ -18,6 +18,16 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 			_context = dbContext;
 			_dbSet = _context.Set<T>();
 
+		}
+
+		public Task AddAsync(T entity)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IEnumerable<T>> GetAllAsync()
+		{
+			throw new NotImplementedException();
 		}
 
 		public async Task<T> GetByIdAsync(object id)
