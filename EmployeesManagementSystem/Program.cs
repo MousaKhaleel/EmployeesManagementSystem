@@ -51,4 +51,36 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//using (var scope = app.Services.CreateScope())
+//{
+//	var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//	var roles = new[] { "Admin", "Employee" };
+//	foreach (var role in roles)
+//	{
+//		if (!await _roleManager.RoleExistsAsync(role))
+//		{
+//			await _roleManager.CreateAsync(new IdentityRole(role));
+//		}
+//	}
+//}
+
+//using (var scope = app.Services.CreateScope())
+//{
+//	var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<Employee>>();
+//	var name = "Admin";
+//	var email = "Admin@adm.com";
+//	var password = "Admin@1234";
+//	if (await _userManager.FindByEmailAsync(email) == null)
+//	{
+//		var employeeAdmin = new Employee
+//		{
+//			EmployeeName = name,
+
+//		};
+//		await _userManager.CreateAsync(employeeAdmin, password);
+//		await _userManager.AddToRoleAsync(employeeAdmin, "Admin");
+//	}
+//}
+//TODO: use jwt ?
+
 app.Run();

@@ -9,6 +9,7 @@ namespace EmployeesManagementSystem.Domain.Interfaces
 {
 	public interface IUnitOfWork : IDisposable
 	{
-		IGenericRepository<Employee> employeeRepository { get; }
+		IEmployeeRepository employeeRepository { get; }
+		IGenericRepository<VacationRequest> vacationRepository { get; }
 	}
 }

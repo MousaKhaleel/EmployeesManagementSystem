@@ -20,19 +20,23 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 
 		}
 
-		public Task AddAsync(T entity)
+		public async Task<IEnumerable<T>> GetAllAsync()
 		{
-			throw new NotImplementedException();
-		}
-
-		public Task<IEnumerable<T>> GetAllAsync()
-		{
-			throw new NotImplementedException();
+			return await _dbSet.ToListAsync();
 		}
 
 		public async Task<T> GetByIdAsync(object id)
 		{
 			return await _dbSet.FindAsync(id);
+		}
+		public async Task AddAsync(T entity)
+		{
+			await _dbSet.AddAsync(entity);
+		}
+
+		public async Task AddRangeAsync(IEnumerable<T> entities)
+		{
+			await _dbSet.AddRangeAsync(entities);
 		}
 		public async Task SaveChangesAsync()
 		{
