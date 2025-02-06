@@ -11,8 +11,9 @@ namespace EmployeesManagementSystem.Domain.Interfaces
 		Task<IEnumerable<T>> GetAllAsync();
 
 		Task<T> GetByIdAsync(object id);
-
 		Task AddAsync(T entity);
+		Task AddRangeAsync(IEnumerable<T> entities);
+
 		Task SaveChangesAsync();
 	}
 }

@@ -63,8 +63,22 @@ namespace EmployeesManagementSystem.Infrastructure.Data
 			});
 
 			modelBuilder.Entity<VacationRequest>()
+						.HasOne(v => v.ApprovedBy)
+						.WithMany(e => e.ApprovedVacationRequests)
+						.HasForeignKey(v => v.ApprovedByEmployeeNumber)
+						.OnDelete(DeleteBehavior.SetNull); 
+
+			modelBuilder.Entity<VacationRequest>()
+				.HasOne(v => v.DeclinedBy)
+				.WithMany(e => e.DeclinedVacationRequests)
+				.HasForeignKey(v => v.DeclinedByEmployeeNumber)
+				.OnDelete(DeleteBehavior.SetNull);
+
+			modelBuilder.Entity<VacationRequest>()
 			.Property(e => e.RequestSubmissionDate)
 			.HasDefaultValueSql("GETDATE()");
+
+			modelBuilder.Entity<Employee>().ToTable("Employees");
 
 			modelBuilder.Entity<Employee>().Ignore(v => v.EmailConfirmed);
 			modelBuilder.Entity<Employee>().Ignore(v => v.SecurityStamp);

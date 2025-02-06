@@ -13,12 +13,16 @@ namespace EmployeesManagementSystem.Infrastructure.UnitOfWork
 	public class UnitOfWork : IUnitOfWork
 	{
 		private readonly ApplicationDbContext _context;
-        public IGenericRepository<Employee> employeeRepository { get; private set; }
-        public UnitOfWork(ApplicationDbContext dbcontext)
+        public IEmployeeRepository employeeRepository { get; private set; }
+
+		public IGenericRepository<VacationRequest> vacationRepository { get; private set; }
+
+		public UnitOfWork(ApplicationDbContext dbcontext)
         {
             _context = dbcontext;
-			employeeRepository = new GenericRepository<Employee>(_context);
-        }
+			employeeRepository = new EmployeeRepository(_context);
+			vacationRepository= new GenericRepository<VacationRequest>(_context);
+		}
 
 		public void Dispose()
 		{

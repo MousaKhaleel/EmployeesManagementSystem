@@ -5,8 +5,9 @@ namespace EmployeesManagementSystem.Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class EmployeesController : ControllerBase
+	public class VacationController : ControllerBase
 	{
-		// get emp , by num, add emp, update, delete?
+		//Submit new vacation request
+		//show pending vacation requests
 	}
 }

@@ -68,5 +68,12 @@ namespace EmployeesManagementSystem.Domain.Models
 		[Required]
 		[Column(TypeName = "decimal(10,2)")]
 		public decimal Salary { get; set; }
+
+		public ICollection<VacationRequest> ApprovedVacationRequests { get; set; }
+		public ICollection<VacationRequest> DeclinedVacationRequests { get; set; }
+		public Employee()//alt
+		{
+			VacationDaysLeft = 24;
+		}
 	}
 }
