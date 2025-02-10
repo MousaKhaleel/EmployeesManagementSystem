@@ -63,20 +63,32 @@ namespace EmployeesManagementSystem.Infrastructure.Data
 			});
 
 			modelBuilder.Entity<VacationRequest>()
-						.HasOne(v => v.ApprovedBy)
-						.WithMany(e => e.ApprovedVacationRequests)
-						.HasForeignKey(v => v.ApprovedByEmployeeNumber)
-						.OnDelete(DeleteBehavior.SetNull); 
+				.HasOne(v => v.ApprovedBy)
+				.WithMany(e => e.ApprovedVacationRequests)
+				.HasForeignKey(v => v.ApprovedByEmployeeNumber)
+				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<VacationRequest>()
 				.HasOne(v => v.DeclinedBy)
 				.WithMany(e => e.DeclinedVacationRequests)
 				.HasForeignKey(v => v.DeclinedByEmployeeNumber)
-				.OnDelete(DeleteBehavior.SetNull);
+				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<VacationRequest>()
 			.Property(e => e.RequestSubmissionDate)
 			.HasDefaultValueSql("GETDATE()");
+
+			modelBuilder.Entity<VacationRequest>()
+	.HasOne(v => v.VacationType)
+	.WithMany(vt => vt.VacationRequests)
+	.HasForeignKey(v => v.VacationTypeCode)
+	.HasPrincipalKey(vt => vt.VacationTypeCode);
+
+			modelBuilder.Entity<VacationRequest>()
+				.HasOne(v => v.Employee)
+				.WithMany()
+				.HasForeignKey(v => v.EmployeeNumber)
+				.HasPrincipalKey(e => e.EmployeeNumber);
 
 			modelBuilder.Entity<Employee>().ToTable("Employees");
 

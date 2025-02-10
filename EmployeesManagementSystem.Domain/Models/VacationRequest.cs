@@ -26,7 +26,7 @@ namespace EmployeesManagementSystem.Domain.Models
 		public Employee Employee { get; set; }
 
 		[MaxLength(1)]
-		[ForeignKey("VacationTypeCode")]
+		[ForeignKey(nameof(VacationType))]
 		public string VacationTypeCode { get; set; }
 		public VacationType VacationType { get; set; }
 
