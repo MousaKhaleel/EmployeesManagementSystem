@@ -38,8 +38,9 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 		{
 			await _dbSet.AddRangeAsync(entities);
 		}
-		public async Task SaveChangesAsync()
+		public async Task UpdateAsync(T entity)
 		{
+			_dbSet.Update(entity);
 			await _context.SaveChangesAsync();
 		}
 

@@ -10,6 +10,7 @@ namespace EmployeesManagementSystem.Domain.Interfaces
 	public interface IUnitOfWork : IDisposable
 	{
 		IEmployeeRepository employeeRepository { get; }
-		IGenericRepository<VacationRequest> vacationRepository { get; }
+		IVacationRepository vacationRepository { get; }
+		Task<int> SaveChangesAsync();
 	}
 }

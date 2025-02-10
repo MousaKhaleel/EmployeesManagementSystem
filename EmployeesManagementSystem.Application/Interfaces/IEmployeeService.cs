@@ -11,10 +11,11 @@ namespace EmployeesManagementSystem.Application.Interfaces
     public interface IEmployeeService
     {
 		Task<IEnumerable<Employee>> GetAllEmployeesAsync();
-		Task<EmployeeDto> GetEmployeeByNumberAsync();
-		Task<IEnumerable<Employee>> GetEmployeesPendingVacationRequestsAsync();
+		Task<EmployeeDto> GetEmployeeByNumberAsync(string empNum);
+		Task<(bool Success, string ErrorMessage)> UpdateEmployeeInfoAsync(string empNum, EmployeeUpdateDto employeeUpdateDto);
+		Task<IEnumerable<Employee>> GetEmployeesWithPendingVacationRequestsAsync();
 		Task<(bool Success, string ErrorMessage)> SeedEmployeesAsync(IEnumerable<Employee> employees);
-		Task<IEnumerable<ApprovedVacationDto>> GetEmployeeApprovedVacationRequestsHistoryAsync();
+		Task<IEnumerable<ApprovedVacationDto>> GetEmployeeApprovedVacationRequestsHistoryAsync(string empNum);
 
 	}
 }

@@ -65,5 +65,16 @@ namespace EmployeesManagementSystem.Api.Controllers
 		var result = await _authService.GetEmployeeProfileAsync();
 		return Ok(result);
 	}
-}
+		[Authorize]
+		[HttpPost("ChangePassword")]
+		public async Task<IActionResult> ChangePassword(string password)
+		{
+			if (password == null)
+			{
+				return BadRequest("password can not be empty");
+			}
+				var result = await _authService.ChangePasswordAsync(password);
+			return Ok(result);
+		}
+	}
 }

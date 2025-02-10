@@ -14,5 +14,6 @@ namespace EmployeesManagementSystem.Application.Interfaces
 		Task<(bool Success, string ErrorMessage)> LoginEmployeeAsync(EmployeeLoginDto employeeRegisterDto);
 		Task LogoutEmployeeAsync();
 		Task<Employee> GetEmployeeProfileAsync();//TODO: replace with dto
+		Task<(bool Success, string ErrorMessage)> ChangePasswordAsync(string password);
 	}
 }

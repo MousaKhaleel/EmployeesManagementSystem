@@ -15,15 +15,18 @@ namespace EmployeesManagementSystem.Infrastructure.UnitOfWork
 		private readonly ApplicationDbContext _context;
         public IEmployeeRepository employeeRepository { get; private set; }
 
-		public IGenericRepository<VacationRequest> vacationRepository { get; private set; }
+		public IVacationRepository vacationRepository { get; private set; }
 
 		public UnitOfWork(ApplicationDbContext dbcontext)
         {
             _context = dbcontext;
 			employeeRepository = new EmployeeRepository(_context);
-			vacationRepository= new GenericRepository<VacationRequest>(_context);
+			vacationRepository= new VacationRepository(_context);
 		}
-
+		public async Task<int> SaveChangesAsync()
+		{
+			return await _context.SaveChangesAsync();
+		}
 		public void Dispose()
 		{
 			_context.Dispose();

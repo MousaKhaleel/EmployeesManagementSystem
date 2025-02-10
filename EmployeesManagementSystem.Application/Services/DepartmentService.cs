@@ -12,10 +12,12 @@ namespace EmployeesManagementSystem.Application.Services
 	public class DepartmentService : IDepartmentService
 	{
 		private readonly IGenericRepository<Department> _departmentsRepository;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public DepartmentService(IGenericRepository<Department> departmentsRepository)
+		public DepartmentService(IGenericRepository<Department> departmentsRepository, IUnitOfWork unitOfWork)
 		{
 			_departmentsRepository = departmentsRepository;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<(bool Success, string ErrorMessage)> SeedDepartmentsAsync(IEnumerable<Department> departments)
 		{
@@ -27,7 +29,7 @@ namespace EmployeesManagementSystem.Application.Services
 					return (false, "Departments have already been seeded");
 				}
 				await _departmentsRepository.AddRangeAsync(departments);
-				await _departmentsRepository.SaveChangesAsync();
+				await _unitOfWork.SaveChangesAsync();
 				return (true, "Departments seeded successfully");
 			}
 			catch (Exception ex)
@@ -35,7 +37,5 @@ namespace EmployeesManagementSystem.Application.Services
 				return (false, $"An error occurred while seeding departments: {ex.Message}");
 			}
 		}
-	}
-}
 	}
 }

@@ -2,6 +2,7 @@
 using EmployeesManagementSystem.Application.Interfaces;
 using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,15 +15,17 @@ namespace EmployeesManagementSystem.Domain.Services
 {
 	public class AuthService : IAuthService
 	{
-		private readonly IGenericRepository<Employee> _employeeRepository;//TODO: replace with the unit of work (will need to?)
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<Employee> _userManager;
 		private readonly SignInManager<Employee> _signInManager;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public AuthService(IGenericRepository<Employee> employeeRepository, UserManager<Employee> userManager, SignInManager<Employee> signInManager)
+		public AuthService(IUnitOfWork unitOfWork, UserManager<Employee> userManager, SignInManager<Employee> signInManager, IHttpContextAccessor httpContextAccessor)
 		{
-			_employeeRepository = employeeRepository;
+			_unitOfWork = unitOfWork;
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public async Task<(bool Success, string ErrorMessage)> RegisterEmployeeAsync(EmployeeRegisterDto employeeRegisterDto)
@@ -40,7 +43,7 @@ namespace EmployeesManagementSystem.Domain.Services
 			{
 				return (false, string.Join(", ", roleResult.Errors.Select(e => e.Description)));
 			}
-			await _employeeRepository.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync();
 			return (true, string.Empty);
 		}
 
@@ -61,9 +64,22 @@ namespace EmployeesManagementSystem.Domain.Services
 
 		public async Task<Employee> GetEmployeeProfileAsync()
 		{
-			//var userId = _userManager.GetUserId(User);
-			var result = await _employeeRepository.GetByIdAsync(1);//TODO: fix temp
+			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+			var result = await _unitOfWork.employeeRepository.GetByIdAsync(userId);//TODO: test
 			return result;
+		}
+
+		public async Task<(bool Success, string ErrorMessage)> ChangePasswordAsync(string password)
+		{
+			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+			var user = await _userManager.FindByIdAsync(userId);
+				var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+				var result = await _userManager.ResetPasswordAsync(user, token, password!);
+				if (!result.Succeeded)
+				{
+					return (false, string.Join(", ", result.Errors.Select(e => e.Description)));
+				}
+				return (true, string.Empty);
 		}
 	}
 }

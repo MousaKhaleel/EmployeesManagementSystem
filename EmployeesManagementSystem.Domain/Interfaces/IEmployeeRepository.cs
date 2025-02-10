@@ -10,8 +10,10 @@ namespace EmployeesManagementSystem.Domain.Interfaces
     public interface IEmployeeRepository : IGenericRepository<Employee>
 	{
 		Task<IEnumerable<Employee>> GetAllEmployeesAsync();
-		Task<EmployeeDto> GetEmployeeByNumberAsync(object id);
-		Task<IEnumerable<ApprovedVacationDto>> GetEmployeesPendingVacationRequestsAsync(object id);
+		Task<Employee> GetEmployeeByNumberAsync(object id);
+		Task<bool> UpdateEmployeeInfoAsync(Employee employee);
+		Task<IEnumerable<VacationRequest>> GetEmployeesWithPendingVacationRequestsAsync();
+		Task<IEnumerable<VacationRequest>> GetApprovedVacationRequestsByEmployeeNumberAsync(string empNum);
 
 	}
 }

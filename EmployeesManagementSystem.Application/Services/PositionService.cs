@@ -12,10 +12,12 @@ namespace EmployeesManagementSystem.Application.Services
 	public class PositionService : IPositionService
 	{
 		private readonly IGenericRepository<Position> _positionRepository;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public PositionService(IGenericRepository<Position> positionRepository)
+		public PositionService(IGenericRepository<Position> positionRepository, IUnitOfWork unitOfWork)
 		{
 			_positionRepository = positionRepository;
+			_unitOfWork = unitOfWork;
 		}
 		public async Task<(bool Success, string ErrorMessage)> SeedPositionsAsync(IEnumerable<Position> positions)
 		{
@@ -27,7 +29,7 @@ namespace EmployeesManagementSystem.Application.Services
 					return (false, "Positions have already been seeded");
 				}
 				await _positionRepository.AddRangeAsync(positions);
-				await _positionRepository.SaveChangesAsync();
+				await _unitOfWork.SaveChangesAsync();
 				return (true, "Positions seeded successfully");
 			}
 			catch (Exception ex)
@@ -35,7 +37,5 @@ namespace EmployeesManagementSystem.Application.Services
 				return (false, $"An error occurred while seeding positions: {ex.Message}");
 			}
 		}
-	}
-}
 	}
 }
