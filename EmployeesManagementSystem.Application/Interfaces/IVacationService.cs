@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Domain.Models;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace EmployeesManagementSystem.Application.Interfaces
 {
 	public interface IVacationService
 	{
-		Task<bool> SubmitVacationRequestAsync(VacationRequest request);
+		Task<bool> SubmitVacationRequestAsync(NewVacationRequestDto newVacationRequestDto);
 		Task<bool> ApproveVacationRequestAsync(int requestId);
 		Task<bool> DeclineVacationRequestAsync(int requestId);
 		Task<(bool Success, string ErrorMessage)> SeedVacationTypesAsync(IEnumerable<VacationType> vacationTypes);

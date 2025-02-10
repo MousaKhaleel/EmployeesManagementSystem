@@ -22,7 +22,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			_authService = authService;
 		}
 
-		[HttpPost("register")]
+		[HttpPost("registerNewEmployee")]
 		public async Task<IActionResult> Register(EmployeeRegisterDto employeeRegisterDto)
 		{
 			if (!ModelState.IsValid)
@@ -66,7 +66,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 		return Ok(result);
 	}
 		[Authorize]
-		[HttpPost("ChangePassword")]
+		[HttpPut("ChangePassword")]
 		public async Task<IActionResult> ChangePassword(string password)
 		{
 			if (password == null)

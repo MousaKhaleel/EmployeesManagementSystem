@@ -23,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<Employee, IdentityRole>(
 	options =>
 	{
-		//temp for dev
+		//temp for dev TODO: remove
 		options.Password.RequiredUniqueChars = 0;
 		options.Password.RequireUppercase = false;
 		options.Password.RequireLowercase = false;

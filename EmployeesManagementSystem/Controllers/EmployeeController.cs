@@ -37,8 +37,8 @@ namespace EmployeesManagementSystem.Api.Controllers
 			return Ok(allEmployees);
 		}
 
-		[HttpGet("SeedEmployees")]
-		public async Task SeedEmployeesAsync()
+		[HttpPost("SeedEmployees")]
+		public async Task<IActionResult> SeedEmployeesAsync()
 		{
 			//TODO: move to a saparate file
 			var employees = new List<Employee>
@@ -153,7 +153,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			var result = await _employeeService.SeedEmployeesAsync(employees);
 			if (result.Success)
 			{
-				return;
+				return Ok("Success");
 			}
 			else
 			{

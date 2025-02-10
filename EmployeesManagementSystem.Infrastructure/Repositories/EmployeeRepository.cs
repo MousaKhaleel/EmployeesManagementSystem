@@ -22,7 +22,17 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 		//TODO: impliment using LINQ
 		public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
 		{
-			return await _context.Employees.Include(e => e.Department).Include(e => e.Position).ToListAsync();
+			return await (from e in _context.Employees
+						  join d in _context.Departments on e.DepartmentId equals d.DepartmentId
+						  join p in _context.Positions on e.PositionId equals p.PositionId
+						  select new Employee
+						  {
+							  EmployeeNumber = e.EmployeeNumber,
+							  EmployeeName = e.EmployeeName,
+							  Department = d,
+							  Position = p,
+						  }).ToListAsync();
+			//return await _context.Employees.Include(e => e.Department).Include(e => e.Position).ToListAsync();
 		}
 
 		public async Task<IEnumerable<VacationRequest>> GetApprovedVacationRequestsByEmployeeNumberAsync(string empNum)
@@ -34,7 +44,18 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 
 		public async Task<Employee> GetEmployeeByNumberAsync(object id)
 		{
-			return await _context.Employees.Where(x=>x.EmployeeNumber==id).Include(e => e.Department).Include(e => e.Position).FirstOrDefaultAsync();
+			return await (from e in _context.Employees
+						  join d in _context.Departments on e.DepartmentId equals d.DepartmentId
+						  join p in _context.Positions on e.PositionId equals p.PositionId
+						  where e.EmployeeNumber == id.ToString()
+						  select new Employee
+						  {
+							  EmployeeNumber = e.EmployeeNumber,
+							  EmployeeName = e.EmployeeName,
+							  Department = d,
+							  Position = p,
+						  }).FirstOrDefaultAsync();
+			//return await _context.Employees.Where(x=>x.EmployeeNumber==id).Include(e => e.Department).Include(e => e.Position).FirstOrDefaultAsync();
 		}
 
 		public async Task<IEnumerable<VacationRequest>> GetEmployeesWithPendingVacationRequestsAsync()

@@ -92,6 +92,8 @@ namespace EmployeesManagementSystem.Application.Services
 			employee.Department.DepartmentId = employeeUpdateDto.DepartmentId;
 			employee.Position.PositionId = employeeUpdateDto.PositionId;
 			employee.ReportedToEmployee.EmployeeNumber = employeeUpdateDto.ReportedToEmployeeNumber;
+			employee.EmployeeName = employeeUpdateDto.EmployeeName;
+			employee.Salary = employeeUpdateDto.Salary;
 
 			var updateResult = await _unitOfWork.employeeRepository.UpdateEmployeeInfoAsync(employee);
 			await _unitOfWork.SaveChangesAsync();
