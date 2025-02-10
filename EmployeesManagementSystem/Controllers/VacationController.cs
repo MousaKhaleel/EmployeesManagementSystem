@@ -119,11 +119,11 @@ namespace EmployeesManagementSystem.Api.Controllers
 					StateName = "Pending",
 				},
 				new RequestState{
-					StateId = 1,
+					StateId = 2,
 					StateName = "Approved",
 				},
 				new RequestState{
-					StateId = 1,
+					StateId = 3,
 					StateName = "Declined",
 				},
 			};

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace EmployeesManagementSystem.Infrastructure.Repositories
 {
-    class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
 	{
 		private readonly ApplicationDbContext _context;
 
@@ -42,6 +42,11 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 						  select v).ToListAsync();
 		}
 
+		public async Task<Employee> GetAsync(Func<Employee, bool> predicate)
+		{
+			return await Task.Run(() => _context.Employees.FirstOrDefault(predicate));
+		}
+
 		public async Task<Employee> GetEmployeeByNumberAsync(object id)
 		{
 			return await (from e in _context.Employees
@@ -56,6 +61,11 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 							  Position = p,
 						  }).FirstOrDefaultAsync();
 			//return await _context.Employees.Where(x=>x.EmployeeNumber==id).Include(e => e.Department).Include(e => e.Position).FirstOrDefaultAsync();
+		}
+
+		public Task<Employee> GetEmployeeByNumberAsync(string id)
+		{
+			throw new NotImplementedException();
 		}
 
 		public async Task<IEnumerable<VacationRequest>> GetEmployeesWithPendingVacationRequestsAsync()
