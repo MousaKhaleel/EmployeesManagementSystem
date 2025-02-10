@@ -9,9 +9,11 @@ namespace EmployeesManagementSystem.Application.Dtos
 {
 	public class ApprovedVacationDto
 	{
-		//		a.Vacation type
-		//b.Vacation description
-		//c.Request duration & total vacation days
-		//d.Approved by employee name.
+		public string VacationTypeCode { get; set; }
+		public string Description { get; set; }
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
+		public int TotalVacationDays { get; set; }
+		public string ApprovedByEmployeeName { get; set; }
 	}
 }

@@ -10,11 +10,11 @@ namespace EmployeesManagementSystem.Application.Dtos
 {
 	public class EmployeeDto
 	{
-		//		Employee number
-		//b.Employee name
-		//c.Department name
-		//d.Position name
-		//e.Reported to employee name.
-		//f.Total vacation days left
+		public string EmployeeNumber { get; set; }
+		public string EmployeeName { get; set; }
+		public string DepartmentName { get; set; }
+		public string PositionName { get; set; }
+		public string ReportedToEmployeeName { get; set; }
+		public int VacationDaysLeft { get; set; }
 	}
 }

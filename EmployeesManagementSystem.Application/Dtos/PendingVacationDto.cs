@@ -9,12 +9,13 @@ namespace EmployeesManagementSystem.Application.Dtos
 {
 	public class PendingVacationDto
 	{
-		//		Vacation description
-		//b.Employee number
-		//c.Employee name
-		//d.Submitted on date
-		//e.Vacation duration (such 2 weeks, 2 days).
-		//f.Start, end dates of vacation.
-		//g.Employee salary.
+		public string Description { get; set; }
+		public string EmployeeNumber { get; set; }
+		public string EmployeeName { get; set; }
+		public DateTime RequestSubmissionDate { get; set; }
+		public int VacationDurationInDays => (EndDate - StartDate).Days;
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
+		public decimal Salary { get; set; }
 	}
 }
