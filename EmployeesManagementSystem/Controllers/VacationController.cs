@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Application.Interfaces;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Application.Interfaces;
 using EmployeesManagementSystem.Application.Services;
 using EmployeesManagementSystem.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -20,15 +21,15 @@ namespace EmployeesManagementSystem.Api.Controllers
 			_vacationService = vacationService;
 		}
 		[HttpPost("SubmitVacationRequest")]
-		public async Task<IActionResult> SubmitVacationRequest(VacationRequest request)
+		public async Task<IActionResult> SubmitVacationRequest(NewVacationRequestDto newVacationRequestDto)
 		{
-			var isOverlapping = await _vacationService.IsVacationOverlappingAsync(request.EmployeeNumber, request.StartDate, request.EndDate);
+			var isOverlapping = await _vacationService.IsVacationOverlappingAsync(newVacationRequestDto.EmployeeNumber, newVacationRequestDto.StartDate, newVacationRequestDto.EndDate);
 			if (isOverlapping)
 			{
 				return BadRequest("Vacation request overlaps with an existing request");
 			}
 
-			var result = await _vacationService.SubmitVacationRequestAsync(request);
+			var result = await _vacationService.SubmitVacationRequestAsync(newVacationRequestDto);
 			if (result)
 			{
 				return Ok("Vacation request submitted successfully");
@@ -42,7 +43,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			var pendingRequests = await _vacationService.GetAllPendingVacationRequestsAsync();
 			return Ok(pendingRequests);
 		}
-		[HttpGet("GetPendingVacationRequestsForSubordinates")]
+		[HttpGet("GetPendingVacationRequestsForSubordinates/{managerEmpNum}")]
 		public async Task<IActionResult> GetPendingVacationRequestsForSubordinatesAsync(string managerEmpNum)
 		{
 			var pendingRequests = await _vacationService.GetPendingVacationRequestsForSubordinatesAsync(managerEmpNum);
@@ -70,9 +71,8 @@ namespace EmployeesManagementSystem.Api.Controllers
 			}
 			return BadRequest("Failed to decline vacation request");
 		}
-		//TODO:
-		//		GET /api/VacationType/Seed(or similar) for seeding vacation types.
-		[HttpGet("SeedVacationTypes")]
+
+		[HttpPost("SeedVacationTypes")]
 		public async Task<IActionResult> SeedVacationTypesAsync()
 		{
 
@@ -107,8 +107,8 @@ namespace EmployeesManagementSystem.Api.Controllers
 			}
 			return StatusCode(500, $"Failed to seed vacation types: {result.ErrorMessage}");
 		}
-		//GET /api/RequestState/Seed for seeding request states.
-		[HttpGet("SeedRequestStates")]
+
+		[HttpPost("SeedRequestStates")]
 		public async Task<IActionResult> SeedRequestStatesAsync()
 		{
 			var requestStates = new List<RequestState>
@@ -119,11 +119,11 @@ namespace EmployeesManagementSystem.Api.Controllers
 					StateName = "Pending",
 				},
 				new RequestState{
-					StateId = 1,
+					StateId = 2,
 					StateName = "Approved",
 				},
 				new RequestState{
-					StateId = 1,
+					StateId = 3,
 					StateName = "Declined",
 				},
 			};
@@ -135,7 +135,6 @@ namespace EmployeesManagementSystem.Api.Controllers
 			return StatusCode(500, $"Failed to seed request states: {result.ErrorMessage}");
 		}
 
-		//TODO: //GET /api/Vacation/ApprovedRequests/{empNum
 		[HttpGet("GetAllApprovedRequests")]
 		public async Task<IActionResult> GetAllApprovedRequests()
 		{

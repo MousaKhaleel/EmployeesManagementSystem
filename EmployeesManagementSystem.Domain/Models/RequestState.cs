@@ -11,7 +11,6 @@ namespace EmployeesManagementSystem.Domain.Models
 	public class RequestState
 	{
 		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int StateId { get; set; }
 
 		[Required, MaxLength(10)]

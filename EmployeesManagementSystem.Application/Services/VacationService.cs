@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Application.Interfaces;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Application.Interfaces;
 using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -31,9 +32,13 @@ namespace EmployeesManagementSystem.Application.Services
 		//TODO:
 		public async Task<bool> ApproveVacationRequestAsync(int requestId)
 		{
-			//TODO: check if superviser
 			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
 			var request = await _unitOfWork.vacationRepository.GetByIdAsync(requestId);
+			var employeeRequesting = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(request.EmployeeNumber);
+			//if (employeeRequesting.ReportedToEmployeeNumber != userId)
+			//{
+			//	return false;
+			//} //TODO: integrate check if superviser
 			var vacationDaysTaken = (request.EndDate - request.StartDate).Days;
 			var approvedForEmp = await _unitOfWork.employeeRepository.GetByIdAsync(request.EmployeeNumber);
 			if (vacationDaysTaken < approvedForEmp.VacationDaysLeft)
@@ -50,7 +55,10 @@ namespace EmployeesManagementSystem.Application.Services
 
 		public async Task<bool> DeclineVacationRequestAsync(int requestId)
 		{
-			//TODO: check if superviser
+			//if (employeeRequesting.ReportedToEmployeeNumber != userId)
+			//{
+			//	return false;
+			//} //TODO: integrate check if superviser
 			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
 			var request = await _unitOfWork.vacationRepository.GetByIdAsync(requestId);
 			request.RequestState.StateName = "Declined";
@@ -119,11 +127,20 @@ namespace EmployeesManagementSystem.Application.Services
 			}
 		}
 
-		public async Task<bool> SubmitVacationRequestAsync(VacationRequest request)
+		public async Task<bool> SubmitVacationRequestAsync(NewVacationRequestDto newVacationRequestDto)
 		{
-			if (await IsVacationOverlappingAsync(request.EmployeeNumber, request.StartDate, request.EndDate))
+			if (await IsVacationOverlappingAsync(newVacationRequestDto.EmployeeNumber, newVacationRequestDto.StartDate, newVacationRequestDto.EndDate))
 				return false;
-
+			var request = new VacationRequest
+			{
+				Description = newVacationRequestDto.Description,
+				EmployeeNumber = newVacationRequestDto.EmployeeNumber,
+				VacationTypeCode = newVacationRequestDto.VacationTypeCode,
+				StartDate = newVacationRequestDto.StartDate,
+				EndDate = newVacationRequestDto.EndDate,
+				TotalVacationDays = newVacationRequestDto.TotalVacationDays,
+				RequestStateId = 1,
+			};
 			await _unitOfWork.vacationRepository.AddAsync(request);
 			await _unitOfWork.SaveChangesAsync();
 			return true;

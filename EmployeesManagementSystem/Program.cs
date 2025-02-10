@@ -1,5 +1,8 @@
+using EmployeesManagementSystem.Application.Interfaces;
+using EmployeesManagementSystem.Application.Services;
 using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
+using EmployeesManagementSystem.Domain.Services;
 using EmployeesManagementSystem.Infrastructure.Data;
 using EmployeesManagementSystem.Infrastructure.Repositories;
 using EmployeesManagementSystem.Infrastructure.UnitOfWork;
@@ -23,7 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<Employee, IdentityRole>(
 	options =>
 	{
-		//temp for dev
+		//temp for dev TODO: remove
 		options.Password.RequiredUniqueChars = 0;
 		options.Password.RequireUppercase = false;
 		options.Password.RequireLowercase = false;
@@ -34,7 +37,16 @@ builder.Services.AddIdentity<Employee, IdentityRole>(
 	.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IVacationRepository, VacationRepository>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IPositionService, PositionService>();
+builder.Services.AddScoped<IVacationService, VacationService>();
 
 var app = builder.Build();
 

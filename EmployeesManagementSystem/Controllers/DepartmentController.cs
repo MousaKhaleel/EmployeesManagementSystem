@@ -18,8 +18,8 @@ namespace EmployeesManagementSystem.Api.Controllers
 		{
 			_departmentService = departmentService;
 		}
-		[HttpGet("SeedDepartments")]
-		public async Task SeedDepartmentsAsync()
+		[HttpPost("SeedDepartments")]
+		public async Task<IActionResult> SeedDepartmentsAsync()
 		{
 			var departments = new List<Department>
 		{
@@ -48,7 +48,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			var result = await _departmentService.SeedDepartmentsAsync(departments);
 			if (result.Success)
 			{
-				return;
+				return Ok("Success");
 			}
 			else
 			{

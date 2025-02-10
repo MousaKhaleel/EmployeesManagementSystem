@@ -17,8 +17,8 @@ namespace EmployeesManagementSystem.Api.Controllers
 		{
 			_positionService = positionService;
 		}
-		[HttpGet("SeedPositions")]
-		public async Task SeedPositionsAsync()
+		[HttpPost("SeedPositions")]
+		public async Task<IActionResult> SeedPositionsAsync()
 		{
 			var positions = new List<Position>
 				{
@@ -46,7 +46,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			var result = await _positionService.SeedPositionsAsync(positions);
 			if (result.Success)
 			{
-				return;
+				return Ok("Success");
 			}
 			else
 			{
