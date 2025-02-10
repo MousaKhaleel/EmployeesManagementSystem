@@ -16,11 +16,11 @@ namespace EmployeesManagementSystem.Domain.Services
 	public class AuthService : IAuthService
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly UserManager<Employee> _userManager;
-		private readonly SignInManager<Employee> _signInManager;
+		private readonly UserManager<ApplicationUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public AuthService(IUnitOfWork unitOfWork, UserManager<Employee> userManager, SignInManager<Employee> signInManager, IHttpContextAccessor httpContextAccessor)
+		public AuthService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor)
 		{
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
@@ -30,8 +30,20 @@ namespace EmployeesManagementSystem.Domain.Services
 
 		public async Task<(bool Success, string ErrorMessage)> RegisterEmployeeAsync(EmployeeRegisterDto employeeRegisterDto)
 		{
-			Employee employee = new()
+			ApplicationUser employee = new()
 			{
+				UserName = employeeRegisterDto.UserName,
+			};
+			var employeeEntity = new Employee
+			{
+				EmployeeNumber = employeeRegisterDto.EmployeeNumber,
+				EmployeeName = employeeRegisterDto.EmployeeName,
+				DepartmentId = employeeRegisterDto.DepartmentId,
+				PositionId = employeeRegisterDto.PositionId,
+				GenderCode = employeeRegisterDto.GenderCode,
+				Salary = employeeRegisterDto.Salary,
+				VacationDaysLeft = 24,
+				UserId = employee.Id
 			};
 			var result = await _userManager.CreateAsync(employee, employeeRegisterDto.Password);
 			if (!result.Succeeded)
@@ -43,13 +55,14 @@ namespace EmployeesManagementSystem.Domain.Services
 			{
 				return (false, string.Join(", ", roleResult.Errors.Select(e => e.Description)));
 			}
+			await _unitOfWork.employeeRepository.AddAsync(employeeEntity);
 			await _unitOfWork.SaveChangesAsync();
 			return (true, string.Empty);
 		}
 
 		public async Task<(bool Success, string ErrorMessage)> LoginEmployeeAsync(EmployeeLoginDto employeeLoginDto)
 		{
-			var result = await _signInManager.PasswordSignInAsync(employeeLoginDto.EmployeeName, employeeLoginDto.Password, false, false);
+			var result = await _signInManager.PasswordSignInAsync(employeeLoginDto.UserName, employeeLoginDto.Password, false, false);
 			if (!result.Succeeded)
 			{
 				return (false, string.Join(", ", result));
@@ -65,7 +78,7 @@ namespace EmployeesManagementSystem.Domain.Services
 		public async Task<Employee> GetEmployeeProfileAsync()
 		{
 			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
-			var result = await _unitOfWork.employeeRepository.GetByIdAsync(userId);//TODO: test
+			var result = await _unitOfWork.employeeRepository.GetEmployeeByIdAsync(userId);//TODO: test
 			return result;
 		}
 

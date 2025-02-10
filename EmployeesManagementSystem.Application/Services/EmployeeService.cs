@@ -4,6 +4,7 @@ using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,16 @@ namespace EmployeesManagementSystem.Application.Services
 	public class EmployeeService : IEmployeeService
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly UserManager<Employee> _userManager;
+		private readonly IGenericRepository<Position> _positionRepository;
+		private readonly IGenericRepository<Department> _departmentRepository;
+		private readonly UserManager<ApplicationUser> _userManager;
 
 
-		public EmployeeService(IUnitOfWork unitOfWork, UserManager<Employee> userManager)
+		public EmployeeService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IGenericRepository<Position> positionRepository, IGenericRepository<Department> departmentRepository)
 		{
 			_unitOfWork = unitOfWork;
+			_positionRepository = positionRepository;
+			_departmentRepository = departmentRepository;
 			_userManager = userManager;
 		}
 		public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
@@ -54,7 +59,7 @@ namespace EmployeesManagementSystem.Application.Services
 				EmployeeName = employee.EmployeeName,
 				PositionName = employee.Position.PositionName,
 				DepartmentName = employee.Department.DepartmentName,
-				ReportedToEmployeeName = employee.ReportedToEmployee.EmployeeName,
+				ReportedToEmployeeName = employee.ReportedToEmployee.EmployeeName ?? "N/A",//TODO: fix
 				VacationDaysLeft = employee.VacationDaysLeft,
 			};
 			return empDto;
@@ -63,17 +68,43 @@ namespace EmployeesManagementSystem.Application.Services
 		public async Task<IEnumerable<Employee>> GetEmployeesWithPendingVacationRequestsAsync()
 		{
 			var vacationRequests = await _unitOfWork.employeeRepository.GetEmployeesWithPendingVacationRequestsAsync();
-			return vacationRequests.Select(vr => vr.Employee).Distinct();
+			return vacationRequests;
 		}
 
 		public async Task<(bool Success, string ErrorMessage)> SeedEmployeesAsync(IEnumerable<Employee> employees)
 		{
 			try
 			{
+				var departments = await _departmentRepository.GetAllAsync();
+				var positions = await _positionRepository.GetAllAsync();
+				if (!departments.Any() || !positions.Any())
+				{
+					return (false, "seed departments and positions first");
+				}
 				var existingEmployees = await _unitOfWork.employeeRepository.GetAllAsync();
 				if (existingEmployees.Any())
 				{
 					return (false, "Employees have already been seeded");
+				}
+				var usersToAdd = new List<ApplicationUser>();
+
+				foreach (var employee in employees)
+				{
+					var username = employee.EmployeeName.Replace(" ", "");
+					var applicationUser = new ApplicationUser
+					{
+						UserName = username,
+					};
+
+					var result = await _userManager.CreateAsync(applicationUser, "password123");
+					if (!result.Succeeded)
+					{
+						return (false, $"Error creating user for {employee.EmployeeName}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+					}
+					employee.UserId = applicationUser.Id;
+					employee.ApplicationUser = applicationUser;
+
+					usersToAdd.Add(applicationUser);
 				}
 				await _unitOfWork.employeeRepository.AddRangeAsync(employees);
 				await _unitOfWork.SaveChangesAsync();
@@ -89,9 +120,18 @@ namespace EmployeesManagementSystem.Application.Services
 		{
 			var employee = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(empNum);
 
-			employee.Department.DepartmentId = employeeUpdateDto.DepartmentId;
-			employee.Position.PositionId = employeeUpdateDto.PositionId;
-			employee.ReportedToEmployee.EmployeeNumber = employeeUpdateDto.ReportedToEmployeeNumber;
+			var newDepartment = await _departmentRepository.GetByIdAsync(employeeUpdateDto.DepartmentId);
+			var newPosition = await _positionRepository.GetByIdAsync(employeeUpdateDto.PositionId);
+			var newManager = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(employeeUpdateDto.ReportedToEmployeeNumber);
+
+			if (newDepartment == null || newPosition == null || newManager == null)
+			{
+				return (false, "Invalid department, position, or manager.");
+			}
+			//TODO: fix gender code
+			employee.Department = newDepartment;
+			employee.Position = newPosition;
+			employee.ReportedToEmployee = newManager;
 			employee.EmployeeName = employeeUpdateDto.EmployeeName;
 			employee.Salary = employeeUpdateDto.Salary;
 

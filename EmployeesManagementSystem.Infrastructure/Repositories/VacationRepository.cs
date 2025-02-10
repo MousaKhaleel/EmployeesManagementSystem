@@ -30,18 +30,23 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 
 		public async Task<IEnumerable<VacationRequest>> GetPendingVacationRequestsAsync()
 		{
-			return await _context.VacationRequests.Where(x => x.RequestState.StateName== "Pending").ToListAsync();
+			return await _context.VacationRequests.Where(x => x.RequestState.StateName== "Pending").Include(x=>x.Employee).ToListAsync();
 		}
 		public async Task<IEnumerable<VacationRequest>> GetApprovedVacationRequestsAsync()
 		{
-			return await _context.VacationRequests.Where(x => x.RequestState.StateName == "Approved").ToListAsync();
+			return await _context.VacationRequests.Where(x => x.RequestState.StateName == "Approved").Include(x => x.Employee).ToListAsync();
 		}
 		public async Task<IEnumerable<VacationRequest>> GetPendingVacationRequestsForSubordinatesAsync(string managerEmpNum)
 		{
 			return await _context.VacationRequests.Where(vr =>
 				vr.Employee.ReportedToEmployeeNumber == managerEmpNum &&
-				vr.RequestState.StateName == "Pending")
+				vr.RequestState.StateName == "Pending").Include(x => x.Employee)
 				.ToListAsync();
+		}
+
+		public async Task<RequestState> GetRequestStateByNameAsync(string stateName)
+		{
+			return await _context.RequestStates.Where(x=>x.StateName==stateName).FirstOrDefaultAsync();
 		}
 	}
 }

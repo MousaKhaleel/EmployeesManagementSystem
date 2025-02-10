@@ -47,11 +47,13 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 			return await Task.Run(() => _context.Employees.FirstOrDefault(predicate));
 		}
 
-		public async Task<Employee> GetEmployeeByNumberAsync(object id)
+		public async Task<Employee> GetEmployeeByNumberAsync(string id)
 		{
 			return await (from e in _context.Employees
 						  join d in _context.Departments on e.DepartmentId equals d.DepartmentId
 						  join p in _context.Positions on e.PositionId equals p.PositionId
+						  join r in _context.Employees on e.ReportedToEmployeeNumber equals r.EmployeeNumber into reported
+						  from r in reported.DefaultIfEmpty()
 						  where e.EmployeeNumber == id.ToString()
 						  select new Employee
 						  {
@@ -59,21 +61,23 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 							  EmployeeName = e.EmployeeName,
 							  Department = d,
 							  Position = p,
+							  ReportedToEmployeeNumber = e.ReportedToEmployeeNumber,
+							  ReportedToEmployee = r != null ? new Employee
+							  {
+								  EmployeeNumber = r.EmployeeNumber,
+								  EmployeeName = r.EmployeeName
+							  } : null
 						  }).FirstOrDefaultAsync();
 			//return await _context.Employees.Where(x=>x.EmployeeNumber==id).Include(e => e.Department).Include(e => e.Position).FirstOrDefaultAsync();
 		}
 
-		public Task<Employee> GetEmployeeByNumberAsync(string id)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<IEnumerable<VacationRequest>> GetEmployeesWithPendingVacationRequestsAsync()
+		public async Task<IEnumerable<Employee>> GetEmployeesWithPendingVacationRequestsAsync()
 		{
 			return await (from v in _context.VacationRequests
 						  join e in _context.Employees on v.EmployeeNumber equals e.EmployeeNumber
 						  where v.RequestStateId == 1
-						  select v)
+						  select e)
+						  .Distinct()
 						  .ToListAsync();
 		}
 
@@ -83,5 +87,10 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 			//var result = await SaveChangesAsync();
 			return true;
 		}
+		public async Task<Employee> GetEmployeeByIdAsync(string id)
+		{
+			return await _context.Employees.Where(x => x.UserId == id).FirstOrDefaultAsync();
+		}
+
 	}
 }
