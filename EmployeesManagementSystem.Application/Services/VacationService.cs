@@ -91,6 +91,10 @@ namespace EmployeesManagementSystem.Application.Services
 			}
 			var reviwer = await _unitOfWork.employeeRepository.GetEmployeeByIdAsync(userId);
 			var request = await _unitOfWork.vacationRepository.GetByIdAsync(requestId);
+			if (request == null)
+			{
+				return (false, "request does not exist.");
+			}
 
 			var employeeRequesting = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(request.EmployeeNumber);
 
