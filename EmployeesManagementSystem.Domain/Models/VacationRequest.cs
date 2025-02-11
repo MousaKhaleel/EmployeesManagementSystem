@@ -39,7 +39,7 @@ namespace EmployeesManagementSystem.Domain.Models
 		public DateTime EndDate { get; set; }
 
 		[Required]
-		public int TotalVacationDays { get; set; }
+		public int TotalVacationDays { get; set; }//TODO: calc
 
 		[Required]
 		[ForeignKey("RequestStateId")]
@@ -55,5 +55,10 @@ namespace EmployeesManagementSystem.Domain.Models
 		[ForeignKey("DeclinedByEmployeeNumber")]
 		public string? DeclinedByEmployeeNumber { get; set; }
 		public Employee? DeclinedBy { get; set; }
+
+		public VacationRequest()
+		{
+			TotalVacationDays = (EndDate - StartDate).Days + 1;
+		}
 	}
 }

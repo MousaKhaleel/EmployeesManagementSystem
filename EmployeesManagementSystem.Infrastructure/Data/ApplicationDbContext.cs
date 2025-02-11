@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EmployeesManagementSystem.Infrastructure.Data
 {
-	public class ApplicationDbContext : IdentityDbContext<Employee>
+	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -90,16 +90,23 @@ namespace EmployeesManagementSystem.Infrastructure.Data
 				.HasForeignKey(v => v.EmployeeNumber)
 				.HasPrincipalKey(e => e.EmployeeNumber);
 
+			modelBuilder.Entity<Employee>()
+						.HasOne(e => e.ApplicationUser)
+						.WithOne(a => a.Employee)
+						.HasForeignKey<Employee>(e => e.UserId)
+						.OnDelete(DeleteBehavior.Restrict);
+
 			modelBuilder.Entity<Employee>().ToTable("Employees");
 
-			modelBuilder.Entity<Employee>().Ignore(v => v.EmailConfirmed);
-			modelBuilder.Entity<Employee>().Ignore(v => v.SecurityStamp);
-			modelBuilder.Entity<Employee>().Ignore(v => v.ConcurrencyStamp);
-			modelBuilder.Entity<Employee>().Ignore(v => v.PhoneNumber);
-			modelBuilder.Entity<Employee>().Ignore(v => v.PhoneNumberConfirmed);
-			modelBuilder.Entity<Employee>().Ignore(v => v.TwoFactorEnabled);
-			modelBuilder.Entity<Employee>().Ignore(v => v.LockoutEnd);
-			modelBuilder.Entity<Employee>().Ignore(v => v.LockoutEnabled);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.EmailConfirmed);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.SecurityStamp);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.ConcurrencyStamp);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.PhoneNumber);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.PhoneNumberConfirmed);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.TwoFactorEnabled);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.LockoutEnd);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.LockoutEnabled);
+			modelBuilder.Entity<ApplicationUser>().Ignore(v => v.AccessFailedCount);
 
 		}
 	}

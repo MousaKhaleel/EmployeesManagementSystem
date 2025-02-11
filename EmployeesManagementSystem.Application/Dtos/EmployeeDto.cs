@@ -14,7 +14,7 @@ namespace EmployeesManagementSystem.Application.Dtos
 		public string EmployeeName { get; set; }
 		public string DepartmentName { get; set; }
 		public string PositionName { get; set; }
-		public string ReportedToEmployeeName { get; set; }
+		public string? ReportedToEmployeeName { get; set; }
 		public int VacationDaysLeft { get; set; }
 	}
 }

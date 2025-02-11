@@ -14,6 +14,5 @@ namespace EmployeesManagementSystem.Application.Dtos
 		public string EmployeeName { get; set; }
 		public decimal Salary { get; set; }
 		public string ReportedToEmployeeNumber { get; set; }
-		//public int VacationDaysLeft { get; set; }
 	}
 }

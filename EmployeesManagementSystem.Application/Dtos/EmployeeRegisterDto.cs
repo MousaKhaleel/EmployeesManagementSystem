@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace EmployeesManagementSystem.Application.Dtos
 
 		[Required, MaxLength(20)]
 		public string EmployeeName { get; set; }
+		public string UserName { get; set; }
 
 		public int DepartmentId { get; set; }
 		public int PositionId { get; set; }
@@ -22,14 +24,10 @@ namespace EmployeesManagementSystem.Application.Dtos
 		[Required, MaxLength(1)]
 		public string GenderCode { get; set; }
 
-		[MaxLength(6)]
-		public string? ReportedToEmployeeNumber { get; set; }
+		//[MaxLength(6)]
+		//public string? ReportedToEmployeeNumber { get; set; }
 
-		public ICollection<Employee>? Subordinates { get; set; }
-
-		[Required]
-		[Range(0, 24)]
-		public int VacationDaysLeft { get; set; } = 24;
+		//public ICollection<Employee>? Subordinates { get; set; }
 
 		[Required]
 		public decimal Salary { get; set; }

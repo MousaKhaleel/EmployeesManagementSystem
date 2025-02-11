@@ -113,19 +113,9 @@ namespace EmployeesManagementSystem.Api.Controllers
 		{
 			var requestStates = new List<RequestState>
 			{
-				new RequestState
-				{
-					StateId = 1,
-					StateName = "Pending",
-				},
-				new RequestState{
-					StateId = 2,
-					StateName = "Approved",
-				},
-				new RequestState{
-					StateId = 3,
-					StateName = "Declined",
-				},
+				new RequestState{ StateName = "Pending" },
+				new RequestState{ StateName = "Approved" },
+				new RequestState{ StateName = "Declined" },
 			};
 			var result = await _vacationService.SeedRequestStatesAsync(requestStates);
 			if (result.Success)

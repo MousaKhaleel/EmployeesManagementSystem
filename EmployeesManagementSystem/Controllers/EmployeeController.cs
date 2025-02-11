@@ -33,8 +33,8 @@ namespace EmployeesManagementSystem.Api.Controllers
 		[HttpGet("GetEmployeeByNumber/{empNum}")]
 		public async Task<IActionResult> GetEmployeeByNumber(string empNum)
 		{
-			var allEmployees = await _employeeService.GetEmployeeByNumberAsync(empNum);
-			return Ok(allEmployees);
+			var employee = await _employeeService.GetEmployeeByNumberAsync(empNum);
+			return Ok(employee);
 		}
 
 		[HttpPost("SeedEmployees")]

@@ -9,39 +9,15 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EmployeesManagementSystem.Domain.Models
 {
-	public class Employee : IdentityUser
+	public class Employee
 	{
 		[Key]
-		[MaxLength(6)]
-		[Column(TypeName = "varchar(6)")]
-		public override string Id
-		{
-			get => EmployeeNumber;
-			set => EmployeeNumber = value;
-		}
-
 		[Required, MaxLength(6)]
 		[Column(TypeName = "varchar(6)")]
 		public string EmployeeNumber { get; set; }
 
 		[Required, MaxLength(20)]
-		[Column(TypeName = "varchar(20)")]
-		public override string UserName
-		{
-			get => EmployeeName;
-			set => EmployeeName = value;
-		}
-
-		[Required, MaxLength(20)]
 		public string EmployeeName { get; set; }
-
-		//[Key]
-		//[MaxLength(6)]
-		//[Column(TypeName = "varchar(6)")]
-		//public string EmployeeNumber { get; set; }
-
-		//[Required, MaxLength(20)]
-		//public string EmployeeName { get; set; }
 
 		[ForeignKey(nameof(DepartmentId))]
 		public int DepartmentId { get; set; }
@@ -71,6 +47,11 @@ namespace EmployeesManagementSystem.Domain.Models
 
 		public ICollection<VacationRequest> ApprovedVacationRequests { get; set; }
 		public ICollection<VacationRequest> DeclinedVacationRequests { get; set; }
+
+		[ForeignKey("UserId")]
+		public string? UserId { get; set; }
+		public ApplicationUser? ApplicationUser { get; set; }
+
 		public Employee()//alt
 		{
 			VacationDaysLeft = 24;

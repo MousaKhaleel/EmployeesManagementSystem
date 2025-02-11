@@ -13,5 +13,7 @@ namespace EmployeesManagementSystem.Domain.Interfaces
 		Task<IEnumerable<VacationRequest>> GetPendingVacationRequestsAsync();
 		Task<IEnumerable<VacationRequest>> GetApprovedVacationRequestsAsync();
 		Task<IEnumerable<VacationRequest>> GetPendingVacationRequestsForSubordinatesAsync(string managerEmpNum);
+
+		Task<RequestState> GetRequestStateByNameAsync(string stateName);
 	}
 }
