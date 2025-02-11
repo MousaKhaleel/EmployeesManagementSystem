@@ -65,32 +65,38 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-	var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-	var roles = new[] { "Admin", "Employee" };
-	foreach (var role in roles)
-	{
-		if (!await _roleManager.RoleExistsAsync(role))
-		{
-			await _roleManager.CreateAsync(new IdentityRole(role));
-		}
-	}
-}
+	var _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-using (var scope = app.Services.CreateScope())
-{
-	var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-	var name = "Admin";
-	var email = "Admin@adm.com";
-	var password = "admin1234";
-	if (await _userManager.FindByEmailAsync(email) == null)
+	if (!_dbContext.Database.CanConnect())
 	{
-		var employeeAdmin = new ApplicationUser
+		Console.WriteLine("Database is not accessible.");
+	}
+	else
+	{
+		var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+		var roles = new[] { "Admin", "Employee" };
+		foreach (var role in roles)
 		{
-			UserName = name,
-			Email = email,
-		};
-		await _userManager.CreateAsync(employeeAdmin, password);
-		await _userManager.AddToRoleAsync(employeeAdmin, "Admin");
+			if (!await _roleManager.RoleExistsAsync(role))
+			{
+				await _roleManager.CreateAsync(new IdentityRole(role));
+			}
+		}
+
+		var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+		var name = "Admin";
+		var email = "Admin@adm.com";
+		var password = "admin1234";
+		if (await _userManager.FindByEmailAsync(email) == null)
+		{
+			var employeeAdmin = new ApplicationUser
+			{
+				UserName = name,
+				Email = email,
+			};
+			await _userManager.CreateAsync(employeeAdmin, password);
+			await _userManager.AddToRoleAsync(employeeAdmin, "Admin");
+		}
 	}
 }
 //TODO: use jwt ?
