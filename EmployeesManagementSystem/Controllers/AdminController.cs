@@ -64,7 +64,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			}
 			return StatusCode(500, $"Failed to add: {result.ErrorMessage}");
 		}
-		//TODO: assign sub for emps
+
 		[HttpPost("AssignSubordinate")]
 		public async Task<IActionResult> AssignSubordinate(string supervisor, string subordinate)
 		{

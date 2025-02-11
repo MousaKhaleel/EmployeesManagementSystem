@@ -37,7 +37,7 @@ namespace EmployeesManagementSystem.Application.Services
 				var sup = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(supervisor);
 				if (sub == null || sup == null)
 				{
-					return (false, "coud not find employees.");
+					return (false, "could not find employees.");
 				}
 				sub.ReportedToEmployee = sup;
 				await _unitOfWork.employeeRepository.UpdateAsync(sub);
@@ -146,12 +146,12 @@ namespace EmployeesManagementSystem.Application.Services
 			{
 				return (false, "Invalid department, position, or manager.");
 			}
-			//TODO: fix gender code null
 			employee.Department = newDepartment;
 			employee.Position = newPosition;
 			employee.ReportedToEmployee = newManager;
 			employee.EmployeeName = employeeUpdateDto.EmployeeName;
 			employee.Salary = employeeUpdateDto.Salary;
+			employee.GenderCode = employeeUpdateDto.GenderCode ?? employee.GenderCode;
 
 			var updateResult = await _unitOfWork.employeeRepository.UpdateEmployeeInfoAsync(employee);
 			await _unitOfWork.SaveChangesAsync();
