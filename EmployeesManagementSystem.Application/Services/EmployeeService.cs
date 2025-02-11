@@ -77,7 +77,7 @@ namespace EmployeesManagementSystem.Application.Services
 				EmployeeName = employee.EmployeeName,
 				PositionName = employee.Position.PositionName,
 				DepartmentName = employee.Department.DepartmentName,
-				ReportedToEmployeeName = employee.ReportedToEmployee.EmployeeName ?? "N/A",//TODO: fix
+				ReportedToEmployeeName = employee.ReportedToEmployee != null ? employee.ReportedToEmployee.EmployeeName : "N/A",
 				VacationDaysLeft = employee.VacationDaysLeft,
 			};
 			return empDto;
