@@ -162,9 +162,6 @@ namespace EmployeesManagementSystem.Api.Controllers
 			}
 		}
 
-		//		Create method to update Employee main info and use employee number as
-		//unique key to find employee then update. (such as department, position, name,
-		//salary).
 		[HttpPut("UpdateEmployeeInfo/{empNum}")]
 		public async Task<IActionResult> UpdateEmployeeInfoAsync(string empNum, EmployeeUpdateDto employeeUpdateDto)
 		{
@@ -178,10 +175,6 @@ namespace EmployeesManagementSystem.Api.Controllers
 			return Ok("Sucsess");
 		}
 
-		//		Create method to update vacation days balance after approve any vacation request
-		//which the logic of this method is to decrease employee vacation days left.
-
-		//GET /api/Employee/WithPendingVacations
 		[HttpGet("GetEmployeesWithPendingVacationRequests")]
 		public async Task<IActionResult> GetEmployeesWithPendingVacationRequests()
 		{

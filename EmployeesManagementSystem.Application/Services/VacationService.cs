@@ -65,6 +65,8 @@ namespace EmployeesManagementSystem.Application.Services
 			var approvedState = await _unitOfWork.vacationRepository.GetRequestStateByNameAsync("Approved");
 			request.RequestState= approvedState;
 			request.ApprovedByEmployeeNumber = reviwer.EmployeeNumber;
+			//TODO:		Create method to update vacation days balance after approve any vacation request
+			//which the logic of this method is to decrease employee vacation days left.
 			approvedForEmp.VacationDaysLeft -= vacationDaysTaken;
 			await _unitOfWork.vacationRepository.UpdateAsync(request);
 			await _unitOfWork.employeeRepository.UpdateAsync(approvedForEmp);

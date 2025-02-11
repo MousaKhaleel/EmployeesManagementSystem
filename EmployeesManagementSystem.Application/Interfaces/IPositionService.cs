@@ -11,5 +11,6 @@ namespace EmployeesManagementSystem.Application.Interfaces
 	{
 		Task<(bool Success, string ErrorMessage)> SeedPositionsAsync(IEnumerable<Position> positions);
 		Task<(bool Success, string ErrorMessage)> AddNewPositionAsync(Position position);
+		Task<IEnumerable<Position>> GetAllPositionsAsync();
 	}
 }

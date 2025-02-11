@@ -28,6 +28,25 @@ namespace EmployeesManagementSystem.Application.Services
 			_departmentRepository = departmentRepository;
 			_userManager = userManager;
 		}
+
+		public async Task<(bool Success, string ErrorMessage)> AssignSubordinateToSupervisorAsync(string supervisor, string subordinate)
+		{
+			try
+			{
+				var sub = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(subordinate);
+				var sup = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(supervisor);
+				if (sub == null || sup == null)
+				{
+					return (false, "coud not find employees.");
+				}
+				sub.ReportedToEmployee = sup;
+				await _unitOfWork.employeeRepository.UpdateAsync(sub);
+				await _unitOfWork.SaveChangesAsync();
+				return (true, null);
+			}
+			catch (Exception ex) { return (false, $"An error occurred: {ex.Message} {ex.InnerException?.Message}"); }
+		}
+
 		public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
 		{
 			var allEmployees = await _unitOfWork.employeeRepository.GetAllEmployeesAsync();
@@ -127,13 +146,12 @@ namespace EmployeesManagementSystem.Application.Services
 			{
 				return (false, "Invalid department, position, or manager.");
 			}
-			//TODO: fix gender code null problem
+			//TODO: fix gender code null
 			employee.Department = newDepartment;
 			employee.Position = newPosition;
 			employee.ReportedToEmployee = newManager;
 			employee.EmployeeName = employeeUpdateDto.EmployeeName;
 			employee.Salary = employeeUpdateDto.Salary;
-			employee.GenderCode=employee.GenderCode;
 
 			var updateResult = await _unitOfWork.employeeRepository.UpdateEmployeeInfoAsync(employee);
 			await _unitOfWork.SaveChangesAsync();
