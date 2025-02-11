@@ -35,6 +35,12 @@ namespace EmployeesManagementSystem.Application.Services
 			}
 		}
 
+		public async Task<IEnumerable<Department>> GetAllDepartmentsAsync()
+		{
+			var all = await _departmentsRepository.GetAllAsync();
+			return all.ToList();
+		}
+
 		public async Task<(bool Success, string ErrorMessage)> SeedDepartmentsAsync(IEnumerable<Department> departments)
 		{
 			try

@@ -56,6 +56,12 @@ namespace EmployeesManagementSystem.Api.Controllers
 				throw new Exception($"Failed to seed: {result.ErrorMessage}");
 			}
 		}
-		//TODO: add get
+
+		[HttpGet("GetAllDepartments")]
+		public async Task<IActionResult> GetAllDepartments()
+		{
+			var allDepartments = await _departmentService.GetAllDepartmentsAsync();
+			return Ok(allDepartments);
+		}
 	}
 }

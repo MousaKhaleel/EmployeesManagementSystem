@@ -16,6 +16,6 @@ namespace EmployeesManagementSystem.Application.Interfaces
 		Task<IEnumerable<Employee>> GetEmployeesWithPendingVacationRequestsAsync(); //TODO: Dto
 		Task<(bool Success, string ErrorMessage)> SeedEmployeesAsync(IEnumerable<Employee> employees);
 		Task<IEnumerable<ApprovedVacationDto>> GetEmployeeApprovedVacationRequestsHistoryAsync(string empNum);
-
+		Task<(bool Success, string ErrorMessage)> AssignSubordinateToSupervisorAsync(string supervisor, string subordinate);
 	}
 }

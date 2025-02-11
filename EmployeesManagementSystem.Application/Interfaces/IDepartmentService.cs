@@ -11,5 +11,6 @@ namespace EmployeesManagementSystem.Application.Interfaces
 	{
 		Task<(bool Success, string ErrorMessage)> SeedDepartmentsAsync(IEnumerable<Department> departments);
 		Task<(bool Success, string ErrorMessage)> AddNewDepartmentAsync(Department department);
+		Task<IEnumerable<Department>> GetAllDepartmentsAsync();
 	}
 }

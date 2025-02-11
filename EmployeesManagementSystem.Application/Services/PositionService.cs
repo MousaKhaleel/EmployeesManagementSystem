@@ -36,6 +36,12 @@ namespace EmployeesManagementSystem.Application.Services
 			}
 		}
 
+		public async Task<IEnumerable<Position>> GetAllPositionsAsync()
+		{
+			var all = await _positionRepository.GetAllAsync();
+			return all.ToList();
+		}
+
 		public async Task<(bool Success, string ErrorMessage)> SeedPositionsAsync(IEnumerable<Position> positions)
 		{
 			try

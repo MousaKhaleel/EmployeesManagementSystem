@@ -22,7 +22,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			_authService = authService;
 		}
 
-		//[Authorize(Roles = "Admin")] TODO: move to admin controller
+		//[Authorize(Roles = "Admin")] TODO: move to admin controller?
 		[HttpPost("registerNewEmployee")]
 		public async Task<IActionResult> Register(EmployeeRegisterDto employeeRegisterDto)
 		{
