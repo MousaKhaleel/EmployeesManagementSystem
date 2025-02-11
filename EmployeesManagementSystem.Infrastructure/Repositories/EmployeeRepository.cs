@@ -58,6 +58,7 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 						  {
 							  EmployeeNumber = e.EmployeeNumber,
 							  EmployeeName = e.EmployeeName,
+							  GenderCode = e.GenderCode,
 							  Department = d,
 							  Position = p,
 							  ReportedToEmployeeNumber = e.ReportedToEmployeeNumber,
