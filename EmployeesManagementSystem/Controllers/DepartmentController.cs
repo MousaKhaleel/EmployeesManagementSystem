@@ -18,6 +18,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 		{
 			_departmentService = departmentService;
 		}
+		//[Authorize(Roles = "Admin")]
 		[HttpPost("SeedDepartments")]
 		public async Task<IActionResult> SeedDepartmentsAsync()
 		{
@@ -55,5 +56,6 @@ namespace EmployeesManagementSystem.Api.Controllers
 				throw new Exception($"Failed to seed: {result.ErrorMessage}");
 			}
 		}
+		//TODO: add get
 	}
 }

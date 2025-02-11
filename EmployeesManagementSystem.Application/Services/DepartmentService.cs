@@ -19,6 +19,22 @@ namespace EmployeesManagementSystem.Application.Services
 			_departmentsRepository = departmentsRepository;
 			_unitOfWork = unitOfWork;
 		}
+
+		public async Task<(bool Success, string ErrorMessage)> AddNewDepartmentAsync(Department department)
+		{
+			try
+			{
+				await _departmentsRepository.AddAsync(department);
+				await _unitOfWork.SaveChangesAsync();
+
+				return (true, null);
+			}
+			catch (Exception ex)
+			{
+				return (false, ex.Message);
+			}
+		}
+
 		public async Task<(bool Success, string ErrorMessage)> SeedDepartmentsAsync(IEnumerable<Department> departments)
 		{
 			try

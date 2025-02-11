@@ -19,7 +19,6 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 		{
 			_context = context;
 		}
-		//TODO: impliment using LINQ
 		public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
 		{
 			return await (from e in _context.Employees

@@ -33,7 +33,6 @@ namespace EmployeesManagementSystem.Application.Services
 			var allEmployees = await _unitOfWork.employeeRepository.GetAllEmployeesAsync();
 			return allEmployees.ToList();
 		}
-		//TODO:
 		public async Task<IEnumerable<ApprovedVacationDto>> GetEmployeeApprovedVacationRequestsHistoryAsync(string empNum)
 		{
 			var approvedHistory = await _unitOfWork.employeeRepository.GetApprovedVacationRequestsByEmployeeNumberAsync(empNum);
@@ -128,12 +127,13 @@ namespace EmployeesManagementSystem.Application.Services
 			{
 				return (false, "Invalid department, position, or manager.");
 			}
-			//TODO: fix gender code
+			//TODO: fix gender code null problem
 			employee.Department = newDepartment;
 			employee.Position = newPosition;
 			employee.ReportedToEmployee = newManager;
 			employee.EmployeeName = employeeUpdateDto.EmployeeName;
 			employee.Salary = employeeUpdateDto.Salary;
+			employee.GenderCode=employee.GenderCode;
 
 			var updateResult = await _unitOfWork.employeeRepository.UpdateEmployeeInfoAsync(employee);
 			await _unitOfWork.SaveChangesAsync();

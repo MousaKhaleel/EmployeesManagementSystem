@@ -78,7 +78,7 @@ namespace EmployeesManagementSystem.Domain.Services
 		public async Task<Employee> GetEmployeeProfileAsync()
 		{
 			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
-			var result = await _unitOfWork.employeeRepository.GetEmployeeByIdAsync(userId);//TODO: test
+			var result = await _unitOfWork.employeeRepository.GetEmployeeByIdAsync(userId);
 			return result;
 		}
 

@@ -18,7 +18,6 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 		{
 			_context = context;
 		}
-		//TODO:
 		public async Task<bool> CheckVacationOverlapAsync(string empNum, DateTime startDate, DateTime endDate)
 		{
 			return await _context.VacationRequests.AnyAsync(r =>

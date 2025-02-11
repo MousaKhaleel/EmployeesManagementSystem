@@ -29,7 +29,22 @@ namespace EmployeesManagementSystem.Application.Services
 			_vacationTypesRepository = vacationTypesRepository;
 			_requestStatesRepository = requestStatesRepository;
 		}
-		//TODO: fix adding aspuser to fix auth problem
+
+		public async Task<(bool Success, string ErrorMessage)> AddNewVacationTypeAsync(VacationType vacationType)
+		{
+			try
+			{
+				await _vacationTypesRepository.AddAsync(vacationType);
+				await _unitOfWork.SaveChangesAsync();
+
+				return (true, null);
+			}
+			catch (Exception ex)
+			{
+				return (false, ex.Message);
+			}
+		}
+
 		public async Task<bool> ApproveVacationRequestAsync(int requestId)
 		{
 			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);

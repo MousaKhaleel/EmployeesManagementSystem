@@ -72,6 +72,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			return BadRequest("Failed to decline vacation request");
 		}
 
+		//[Authorize(Roles = "Admin")]
 		[HttpPost("SeedVacationTypes")]
 		public async Task<IActionResult> SeedVacationTypesAsync()
 		{
@@ -108,6 +109,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			return StatusCode(500, $"Failed to seed vacation types: {result.ErrorMessage}");
 		}
 
+		//[Authorize(Roles = "Admin")]
 		[HttpPost("SeedRequestStates")]
 		public async Task<IActionResult> SeedRequestStatesAsync()
 		{

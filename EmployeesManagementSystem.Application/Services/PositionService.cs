@@ -1,6 +1,7 @@
 ﻿using EmployeesManagementSystem.Application.Interfaces;
 using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,22 @@ namespace EmployeesManagementSystem.Application.Services
 			_positionRepository = positionRepository;
 			_unitOfWork = unitOfWork;
 		}
+
+		public async Task<(bool Success, string ErrorMessage)> AddNewPositionAsync(Position position)
+		{
+			try
+			{
+				await _positionRepository.AddAsync(position);
+				await _unitOfWork.SaveChangesAsync();
+
+				return (true, null);
+			}
+			catch (Exception ex)
+			{
+				return (false, ex.Message);
+			}
+		}
+
 		public async Task<(bool Success, string ErrorMessage)> SeedPositionsAsync(IEnumerable<Position> positions)
 		{
 			try

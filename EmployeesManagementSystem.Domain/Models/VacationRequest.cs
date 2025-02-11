@@ -39,7 +39,7 @@ namespace EmployeesManagementSystem.Domain.Models
 		public DateTime EndDate { get; set; }
 
 		[Required]
-		public int TotalVacationDays { get; set; }//TODO: calc
+		public int TotalVacationDays { get; set; }
 
 		[Required]
 		[ForeignKey("RequestStateId")]
