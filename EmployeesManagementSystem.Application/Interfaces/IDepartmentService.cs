@@ -10,5 +10,6 @@ namespace EmployeesManagementSystem.Application.Interfaces
 	public interface IDepartmentService
 	{
 		Task<(bool Success, string ErrorMessage)> SeedDepartmentsAsync(IEnumerable<Department> departments);
+		Task<(bool Success, string ErrorMessage)> AddNewDepartmentAsync(Department department);
 	}
 }

@@ -20,5 +20,6 @@ namespace EmployeesManagementSystem.Application.Interfaces
 		Task<IEnumerable<VacationRequest>> GetAllPendingVacationRequestsAsync();//TODO: replace w dto
 		Task<IEnumerable<VacationRequest>> GetPendingVacationRequestsForSubordinatesAsync(string managerEmpNum);//TODO: replace w dto
 
+		Task<(bool Success, string ErrorMessage)> AddNewVacationTypeAsync(VacationType vacationType);
 	}
 }

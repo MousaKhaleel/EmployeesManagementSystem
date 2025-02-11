@@ -10,5 +10,6 @@ namespace EmployeesManagementSystem.Application.Interfaces
 	public interface IPositionService
 	{
 		Task<(bool Success, string ErrorMessage)> SeedPositionsAsync(IEnumerable<Position> positions);
+		Task<(bool Success, string ErrorMessage)> AddNewPositionAsync(Position position);
 	}
 }

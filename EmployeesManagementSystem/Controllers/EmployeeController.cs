@@ -37,6 +37,7 @@ namespace EmployeesManagementSystem.Api.Controllers
 			return Ok(employee);
 		}
 
+		//[Authorize(Roles = "Admin")]
 		[HttpPost("SeedEmployees")]
 		public async Task<IActionResult> SeedEmployeesAsync()
 		{
