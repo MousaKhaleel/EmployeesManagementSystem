@@ -11,8 +11,8 @@ namespace EmployeesManagementSystem.Application.Interfaces
 	public interface IVacationService
 	{
 		Task<bool> SubmitVacationRequestAsync(NewVacationRequestDto newVacationRequestDto);
-		Task<bool> ApproveVacationRequestAsync(int requestId);
-		Task<bool> DeclineVacationRequestAsync(int requestId);
+		Task<(bool Success, string ErrorMessage)> ApproveVacationRequestAsync(int requestId);
+		Task<(bool Success, string ErrorMessage)> DeclineVacationRequestAsync(int requestId);
 		Task<(bool Success, string ErrorMessage)> SeedVacationTypesAsync(IEnumerable<VacationType> vacationTypes);
 		Task<(bool Success, string ErrorMessage)> SeedRequestStatesAsync(IEnumerable<RequestState> requestStates);
 		Task<IEnumerable<VacationRequest>> GetAllApprovedRequestsAsync();

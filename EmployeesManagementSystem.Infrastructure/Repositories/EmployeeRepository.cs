@@ -24,12 +24,33 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 			return await (from e in _context.Employees
 						  join d in _context.Departments on e.DepartmentId equals d.DepartmentId
 						  join p in _context.Positions on e.PositionId equals p.PositionId
+						  join u in _context.Users on e.UserId equals u.Id into userGroup
+						  from u in userGroup.DefaultIfEmpty()
+						  join r in _context.Employees on e.ReportedToEmployeeNumber equals r.EmployeeNumber into reportedToGroup
+						  from r in reportedToGroup.DefaultIfEmpty()
 						  select new Employee
 						  {
 							  EmployeeNumber = e.EmployeeNumber,
 							  EmployeeName = e.EmployeeName,
 							  Department = d,
 							  Position = p,
+							  ApplicationUser = u != null ? new ApplicationUser
+							  {
+								  Id = u.Id,
+								  UserName = u.UserName,
+							  } : null,
+							  ReportedToEmployee = r != null ? new Employee
+							  {
+								  EmployeeNumber = r.EmployeeNumber,
+								  EmployeeName = r.EmployeeName
+							  } : null,
+							  Subordinates = _context.Employees
+								  .Where(sub => sub.ReportedToEmployeeNumber == e.EmployeeNumber)
+								  .Select(sub => new Employee
+								  {
+									  EmployeeNumber = sub.EmployeeNumber,
+									  EmployeeName = sub.EmployeeName
+								  }).ToList()
 						  }).ToListAsync();
 			//return await _context.Employees.Include(e => e.Department).Include(e => e.Position).ToListAsync();
 		}
@@ -51,9 +72,11 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 			return await (from e in _context.Employees
 						  join d in _context.Departments on e.DepartmentId equals d.DepartmentId
 						  join p in _context.Positions on e.PositionId equals p.PositionId
+						  join u in _context.Users on e.UserId equals u.Id into userGroup
+						  from u in userGroup.DefaultIfEmpty()
 						  join r in _context.Employees on e.ReportedToEmployeeNumber equals r.EmployeeNumber into reported
 						  from r in reported.DefaultIfEmpty()
-						  where e.EmployeeNumber == id.ToString()
+						  where e.EmployeeNumber == id
 						  select new Employee
 						  {
 							  EmployeeNumber = e.EmployeeNumber,
@@ -66,6 +89,11 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 							  {
 								  EmployeeNumber = r.EmployeeNumber,
 								  EmployeeName = r.EmployeeName
+							  } : null,
+							  ApplicationUser = u != null ? new ApplicationUser
+							  {
+								  Id = u.Id,
+								  UserName = u.UserName,
 							  } : null
 						  }).FirstOrDefaultAsync();
 			//return await _context.Employees.Where(x=>x.EmployeeNumber==id).Include(e => e.Department).Include(e => e.Position).FirstOrDefaultAsync();
