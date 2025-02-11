@@ -45,51 +45,65 @@ namespace EmployeesManagementSystem.Application.Services
 			}
 		}
 
-		public async Task<bool> ApproveVacationRequestAsync(int requestId)
+		public async Task<(bool Success, string ErrorMessage)> ApproveVacationRequestAsync(int requestId)
 		{
 			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+			if (userId == null)
+			{
+				return (false, "Login first");
+			}
 			var reviwer = await _unitOfWork.employeeRepository.GetEmployeeByIdAsync(userId);
 
 			var request = await _unitOfWork.vacationRepository.GetByIdAsync(requestId);
-			var employeeRequesting = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(request.EmployeeNumber);
-			//if (employeeRequesting.ReportedToEmployeeNumber != reviwer.EmployeeNumber)
-			//{
-			//	return false;
-			//} //TODO: integrate check if superviser
-			var vacationDaysTaken = (request.EndDate - request.StartDate).Days;
-			var approvedForEmp = await _unitOfWork.employeeRepository.GetByIdAsync(request.EmployeeNumber);
-			if (vacationDaysTaken > approvedForEmp.VacationDaysLeft)
+			if (request == null)
 			{
-				return false;
+				return (false, "request does not exist.");
+			}
+
+			var employeeRequesting = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(request.EmployeeNumber);
+			if (employeeRequesting.ReportedToEmployeeNumber != reviwer.EmployeeNumber)
+			{
+				return (false, "Can not approve if the employee is not your subordante");
+			}
+			var vacationDaysTaken = (request.EndDate - request.StartDate).Days;
+			if (vacationDaysTaken > employeeRequesting.VacationDaysLeft)
+			{
+				return (false, "no enough vacation days");
 			}
 			var approvedState = await _unitOfWork.vacationRepository.GetRequestStateByNameAsync("Approved");
 			request.RequestState= approvedState;
 			request.ApprovedByEmployeeNumber = reviwer.EmployeeNumber;
 			//TODO:		Create method to update vacation days balance after approve any vacation request
 			//which the logic of this method is to decrease employee vacation days left.
-			approvedForEmp.VacationDaysLeft -= vacationDaysTaken;
+			employeeRequesting.VacationDaysLeft -= vacationDaysTaken;
 			await _unitOfWork.vacationRepository.UpdateAsync(request);
-			await _unitOfWork.employeeRepository.UpdateAsync(approvedForEmp);
+			await _unitOfWork.employeeRepository.UpdateAsync(employeeRequesting);
 			await _unitOfWork.SaveChangesAsync();
-			return true;
+			return (true, null);
 		}
 
-		public async Task<bool> DeclineVacationRequestAsync(int requestId)
+		public async Task<(bool Success, string ErrorMessage)> DeclineVacationRequestAsync(int requestId)
 		{
-			//if (employeeRequesting.ReportedToEmployeeNumber != reviwer.EmployeeNumber)
-			//{
-			//	return false;
-			//} //TODO: integrate check if superviser
 			var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+			if (userId == null)
+			{
+				return (false, "Login first");
+			}
 			var reviwer = await _unitOfWork.employeeRepository.GetEmployeeByIdAsync(userId);
-
 			var request = await _unitOfWork.vacationRepository.GetByIdAsync(requestId);
+
+			var employeeRequesting = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(request.EmployeeNumber);
+
+			if (employeeRequesting.ReportedToEmployeeNumber != reviwer.EmployeeNumber)
+			{
+				return (false, "Can not approve if the employee is not your subordante");
+			}
 			var declinedState = await _unitOfWork.vacationRepository.GetRequestStateByNameAsync("Declined");
 			request.RequestState= declinedState;
 			request.DeclinedByEmployeeNumber = reviwer.EmployeeNumber;
 			await _unitOfWork.vacationRepository.UpdateAsync(request);
 			await _unitOfWork.SaveChangesAsync();
-			return true;
+			return (true, null);
 		}
 
 		public async Task<IEnumerable<VacationRequest>> GetAllApprovedRequestsAsync()

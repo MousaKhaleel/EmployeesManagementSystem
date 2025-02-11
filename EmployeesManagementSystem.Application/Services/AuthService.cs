@@ -43,7 +43,8 @@ namespace EmployeesManagementSystem.Domain.Services
 				GenderCode = employeeRegisterDto.GenderCode,
 				Salary = employeeRegisterDto.Salary,
 				VacationDaysLeft = 24,
-				UserId = employee.Id
+				UserId = employee.Id,
+				ApplicationUser= employee,
 			};
 			var result = await _userManager.CreateAsync(employee, employeeRegisterDto.Password);
 			if (!result.Succeeded)

@@ -54,18 +54,18 @@ namespace EmployeesManagementSystem.Api.Controllers
 		public async Task<IActionResult> ApproveVacationRequest(int requestId)
 		{
 			var result = await _vacationService.ApproveVacationRequestAsync(requestId);
-			if (result)
+			if (!result.Success)
 			{
-				return Ok("Vacation request approved");
+				return BadRequest(result.ErrorMessage);
 			}
-			return BadRequest("Failed to approve vacation request");
+			return Ok("Vacation request approved");
 		}
 
 		[HttpPost("Decline/{requestId}")]
 		public async Task<IActionResult> DeclineVacationRequest(int requestId)
 		{
 			var result = await _vacationService.DeclineVacationRequestAsync(requestId);
-			if (result)
+			if (!result.Success)
 			{
 				return Ok("Vacation request declined");
 			}

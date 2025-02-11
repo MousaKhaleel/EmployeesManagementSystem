@@ -112,6 +112,8 @@ namespace EmployeesManagementSystem.Application.Services
 					var applicationUser = new ApplicationUser
 					{
 						UserName = username,
+						Employee = employee,
+						EmployeeNumber = employee.EmployeeNumber,
 					};
 
 					var result = await _userManager.CreateAsync(applicationUser, "password123");
@@ -130,7 +132,7 @@ namespace EmployeesManagementSystem.Application.Services
 			}
 			catch (Exception ex)
 			{
-				return (false, $"An error occurred while seeding employees: {ex.Message}");
+				return (false, $"An error occurred: {ex.Message} {ex.InnerException?.Message}");
 			}
 		}
 
