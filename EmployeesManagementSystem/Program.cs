@@ -48,6 +48,8 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
 builder.Services.AddScoped<IVacationService, VacationService>();
 
+builder.Services.AddScoped<DatabaseInitializer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -65,44 +67,8 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-	try
-	{
-		var _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-		if (!_dbContext.Database.CanConnect())
-		{
-			Console.WriteLine("Database is not accessible.");
-		}
-		else
-		{
-			//Migrate first
-			var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-			var roles = new[] { "Admin", "Employee" };
-			foreach (var role in roles)
-			{
-				if (!await _roleManager.RoleExistsAsync(role))
-				{
-					await _roleManager.CreateAsync(new IdentityRole(role));
-				}
-			}
-
-			var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-			var name = "Admin";
-			var email = "Admin@adm.com";
-			var password = "admin1234";
-			if (await _userManager.FindByEmailAsync(email) == null)
-			{
-				var employeeAdmin = new ApplicationUser
-				{
-					UserName = name,
-					Email = email,
-				};
-				await _userManager.CreateAsync(employeeAdmin, password);
-				await _userManager.AddToRoleAsync(employeeAdmin, "Admin");
-			}
-		}
-	}
-	catch (Exception ex) { throw ex; }
+	var initializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+	await initializer.InitializeAsync();
 }
 //TODO: use jwt ?
 
