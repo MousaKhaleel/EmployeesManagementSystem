@@ -17,6 +17,7 @@ namespace EmployeesManagementSystem.Application.Interfaces
 		Task<(bool Success, string ErrorMessage)> SeedRequestStatesAsync(IEnumerable<RequestState> requestStates);
 		Task<IEnumerable<VacationRequest>> GetAllApprovedRequestsAsync();
 		Task<bool> IsVacationOverlappingAsync(string empNum, DateTime startDate, DateTime endDate);
+		Task<bool> IsVacationOverlappingWithinDepartmentAsync(string empNum, DateTime startDate, DateTime endDate);
 		Task<IEnumerable<VacationRequest>> GetAllPendingVacationRequestsAsync();//TODO: replace w dto
 		Task<IEnumerable<VacationRequest>> GetPendingVacationRequestsForSubordinatesAsync(string managerEmpNum);//TODO: replace w dto
 
