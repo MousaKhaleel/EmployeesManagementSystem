@@ -153,7 +153,7 @@ namespace EmployeesManagementSystem.Application.Services
 			employee.ReportedToEmployee = newManager;
 			employee.EmployeeName = employeeUpdateDto.EmployeeName;
 			employee.Salary = employeeUpdateDto.Salary;
-			employee.GenderCode = employeeUpdateDto.GenderCode ?? employee.GenderCode;
+			employee.GenderCode = employeeUpdateDto.GenderCode.ToUpper() ?? employee.GenderCode;
 
 			var updateResult = await _unitOfWork.employeeRepository.UpdateEmployeeInfoAsync(employee);
 			await _unitOfWork.SaveChangesAsync();

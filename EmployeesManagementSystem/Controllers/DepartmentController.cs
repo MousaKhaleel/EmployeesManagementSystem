@@ -23,24 +23,38 @@ namespace EmployeesManagementSystem.Api.Controllers
 		[HttpPost("SeedDepartments")]
 		public async Task<IActionResult> SeedDepartmentsAsync()
 		{
-			var departments = DepartmentSeedData.GetDepartments();
+			try
+			{
+				var departments = DepartmentSeedData.GetDepartments();
 
-			var result = await _departmentService.SeedDepartmentsAsync(departments);
-			if (result.Success)
-			{
-				return Ok("Success");
+				var result = await _departmentService.SeedDepartmentsAsync(departments);
+				if (result.Success)
+				{
+					return Ok("Success");
+				}
+				else
+				{
+					throw new Exception($"Failed to seed: {result.ErrorMessage}");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				throw new Exception($"Failed to seed: {result.ErrorMessage}");
+				return BadRequest(ex.Message);
 			}
 		}
 
 		[HttpGet("GetAllDepartments")]
 		public async Task<IActionResult> GetAllDepartments()
 		{
-			var allDepartments = await _departmentService.GetAllDepartmentsAsync();
-			return Ok(allDepartments);
+			try
+			{
+				var allDepartments = await _departmentService.GetAllDepartmentsAsync();
+				return Ok(allDepartments);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

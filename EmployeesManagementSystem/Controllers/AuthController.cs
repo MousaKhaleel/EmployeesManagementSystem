@@ -30,52 +30,86 @@ namespace EmployeesManagementSystem.Api.Controllers
 			{
 				return BadRequest("Failed: " + ModelState);
 			}
-
-			var result = await _authService.RegisterEmployeeAsync(employeeRegisterDto);
-
-			if (result.Success)
+			try
 			{
-				return Ok("Registered successfully");
+				var result = await _authService.RegisterEmployeeAsync(employeeRegisterDto);
+
+				if (result.Success)
+				{
+					return Ok("Registered successfully");
+				}
+
+				return BadRequest(result.ErrorMessage);
 			}
-
-			return BadRequest(result.ErrorMessage);
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
-	[HttpPost("login")]
-	public async Task<IActionResult> Login(EmployeeLoginDto employeeLoginDto)
-	{
-		var result = await _authService.LoginEmployeeAsync(employeeLoginDto);
-		if (result.Success)
+		[HttpPost("login")]
+		public async Task<IActionResult> Login(EmployeeLoginDto employeeLoginDto)
 		{
-			return Ok("Login successful");
+			try
+			{
+				var result = await _authService.LoginEmployeeAsync(employeeLoginDto);
+				if (result.Success)
+				{
+					return Ok("Login successful");
+				}
+				return BadRequest(result.ErrorMessage);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
-		return BadRequest(result.ErrorMessage);
-	}
 
-	[Authorize]
-	[HttpPost("logout")]
-	public async Task<IActionResult> Logout()
-	{
-		await _authService.LogoutEmployeeAsync();
-		return Ok("succses");
-	}
+		[Authorize]
+		[HttpPost("logout")]
+		public async Task<IActionResult> Logout()
+		{
+			try
+			{
+				await _authService.LogoutEmployeeAsync();
+				return Ok("Succses");
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 
-	[Authorize]
-	[HttpGet("Profile")]
-	public async Task<IActionResult> Profile()
-	{
-		var result = await _authService.GetEmployeeProfileAsync();
-		return Ok(result);
-	}
+		[Authorize]
+		[HttpGet("Profile")]
+		public async Task<IActionResult> Profile()
+		{
+			try
+			{
+				var result = await _authService.GetEmployeeProfileAsync();
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 		[Authorize]
 		[HttpPut("ChangePassword")]
 		public async Task<IActionResult> ChangePassword(string password)
 		{
 			if (password == null)
 			{
-				return BadRequest("password can not be empty");
+				return BadRequest("Password can not be empty");
 			}
+			try
+			{
 				var result = await _authService.ChangePasswordAsync(password);
-			return Ok(result);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

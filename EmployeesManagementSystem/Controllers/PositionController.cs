@@ -22,22 +22,36 @@ namespace EmployeesManagementSystem.Api.Controllers
 		[HttpPost("SeedPositions")]
 		public async Task<IActionResult> SeedPositionsAsync()
 		{
-			var positions = PositionSeedData.GetPositions();
-			var result = await _positionService.SeedPositionsAsync(positions);
-			if (result.Success)
+			try
 			{
-				return Ok("Success");
+				var positions = PositionSeedData.GetPositions();
+				var result = await _positionService.SeedPositionsAsync(positions);
+				if (result.Success)
+				{
+					return Ok("Success");
+				}
+				else
+				{
+					throw new Exception($"Failed to seed: {result.ErrorMessage}");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				throw new Exception($"Failed to seed: {result.ErrorMessage}");
+				return BadRequest(ex.Message);
 			}
 		}
 		[HttpGet("GetAllPositions")]
 		public async Task<IActionResult> GetAllPositions()
 		{
-			var allPositions = await _positionService.GetAllPositionsAsync();
-			return Ok(allPositions);
+			try
+			{
+				var allPositions = await _positionService.GetAllPositionsAsync();
+				return Ok(allPositions);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

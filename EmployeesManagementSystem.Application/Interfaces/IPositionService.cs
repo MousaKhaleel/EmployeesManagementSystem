@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Domain.Models;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace EmployeesManagementSystem.Application.Interfaces
 	public interface IPositionService
 	{
 		Task<(bool Success, string ErrorMessage)> SeedPositionsAsync(IEnumerable<Position> positions);
-		Task<(bool Success, string ErrorMessage)> AddNewPositionAsync(Position position);
+		Task<(bool Success, string ErrorMessage)> AddNewPositionAsync(PositionDto positionDto);
 		Task<IEnumerable<Position>> GetAllPositionsAsync();
 	}
 }

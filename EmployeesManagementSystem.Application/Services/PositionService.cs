@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Application.Interfaces;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Application.Interfaces;
 using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,12 @@ namespace EmployeesManagementSystem.Application.Services
 			_unitOfWork = unitOfWork;
 		}
 
-		public async Task<(bool Success, string ErrorMessage)> AddNewPositionAsync(Position position)
+		public async Task<(bool Success, string ErrorMessage)> AddNewPositionAsync(PositionDto positionDto)
 		{
+			var position = new Position
+			{
+				PositionName = positionDto.PositionName,
+			};
 			try
 			{
 				await _positionRepository.AddAsync(position);

@@ -27,52 +27,90 @@ namespace EmployeesManagementSystem.Api.Controllers
 		[HttpGet("GetAllEmployees")]
 		public async Task<IActionResult> GetAllEmployees()
 		{
-			var allEmployees = await _employeeService.GetAllEmployeesAsync();
-			return Ok(allEmployees);
+			try
+			{
+				var allEmployees = await _employeeService.GetAllEmployeesAsync();
+				return Ok(allEmployees);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpGet("GetEmployeeByNumber/{empNum}")]
 		public async Task<IActionResult> GetEmployeeByNumber(string empNum)
 		{
-			var employee = await _employeeService.GetEmployeeByNumberAsync(empNum);
-			return Ok(employee);
+			try
+			{
+				var employee = await _employeeService.GetEmployeeByNumberAsync(empNum);
+				return Ok(employee);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		//[Authorize(Roles = "Admin")]
 		[HttpPost("SeedEmployees")]
 		public async Task<IActionResult> SeedEmployeesAsync()
 		{
-			var employees = EmployeeSeedData.GetEmployees();
+			try
+			{
+				var employees = EmployeeSeedData.GetEmployees();
 
-			var result = await _employeeService.SeedEmployeesAsync(employees);
-			if (result.Success)
-			{
-				return Ok("Success");
+				var result = await _employeeService.SeedEmployeesAsync(employees);
+				if (result.Success)
+				{
+					return Ok("Success");
+				}
+				else
+				{
+					throw new Exception($"Failed to seed: {result.ErrorMessage}");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				throw new Exception($"Failed to seed: {result.ErrorMessage}");
+				return BadRequest(ex.Message);
 			}
 		}
 
 		[HttpPut("UpdateEmployeeInfo/{empNum}")]
 		public async Task<IActionResult> UpdateEmployeeInfoAsync(string empNum, EmployeeUpdateDto employeeUpdateDto)
 		{
-
-			var result = await _employeeService.UpdateEmployeeInfoAsync(empNum, employeeUpdateDto);
-			if (!result.Success)
+			//if (!ModelState.IsValid)
+			//{
+			//	return BadRequest(ModelState);
+			//}
+			try
 			{
-				return BadRequest(result.ErrorMessage);
-			}
+				var result = await _employeeService.UpdateEmployeeInfoAsync(empNum, employeeUpdateDto);
+				if (!result.Success)
+				{
+					return BadRequest(result.ErrorMessage);
+				}
 
-			return Ok("Sucsess");
+				return Ok("Updated successfully");
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpGet("GetEmployeesWithPendingVacationRequests")]
 		public async Task<IActionResult> GetEmployeesWithPendingVacationRequests()
 		{
-			var all = await _employeeService.GetEmployeesWithPendingVacationRequestsAsync();
-			return Ok(all);
+			try
+			{
+				var all = await _employeeService.GetEmployeesWithPendingVacationRequestsAsync();
+				return Ok(all);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }
