@@ -138,7 +138,12 @@ namespace EmployeesManagementSystem.Application.Services
 		public async Task<bool> IsVacationOverlappingWithinDepartmentAsync(string empNum, DateTime startDate, DateTime endDate)
 		{
 			var emp = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(empNum);
-			return await _unitOfWork.vacationRepository.CheckVacationOverlapWithinDepartmentAsync(emp.DepartmentId, startDate, endDate);
+			var overlap = await _unitOfWork.vacationRepository.CheckVacationOverlapWithinDepartmentAsync(emp.DepartmentId, startDate, endDate);
+			if (overlap)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		public async Task<(bool Success, string ErrorMessage)> SeedRequestStatesAsync(IEnumerable<RequestState> requestStates)
