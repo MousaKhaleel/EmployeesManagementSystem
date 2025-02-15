@@ -25,6 +25,11 @@ namespace EmployeesManagementSystem.Api.Controllers
 		{
 			try
 			{
+				//var overlapWithinDepartment = await _vacationService.IsVacationOverlappingWithinDepartmentAsync(newVacationRequestDto.EmployeeNumber, newVacationRequestDto.StartDate, newVacationRequestDto.EndDate);
+				//if (overlapWithinDepartment)
+				//{
+				//	return BadRequest("Too many employees on leave in your department.");
+				//}
 				var isOverlapping = await _vacationService.IsVacationOverlappingAsync(newVacationRequestDto.EmployeeNumber, newVacationRequestDto.StartDate, newVacationRequestDto.EndDate);
 				if (isOverlapping)
 				{

@@ -47,5 +47,15 @@ namespace EmployeesManagementSystem.Infrastructure.Repositories
 		{
 			return await _context.RequestStates.Where(x=>x.StateName==stateName).FirstOrDefaultAsync();
 		}
+
+		public async Task<bool> CheckVacationOverlapWithinDepartmentAsync(int departmentId, DateTime startDate, DateTime endDate)
+		{
+			int overlapCount = await _context.VacationRequests
+				.CountAsync(v => v.Employee.DepartmentId == departmentId &&
+								 v.StartDate <= endDate &&
+								 v.EndDate >= startDate);
+
+			return overlapCount >= 3;
+		}
 	}
 }
