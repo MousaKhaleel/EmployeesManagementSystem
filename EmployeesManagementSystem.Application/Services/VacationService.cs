@@ -30,8 +30,13 @@ namespace EmployeesManagementSystem.Application.Services
 			_requestStatesRepository = requestStatesRepository;
 		}
 
-		public async Task<(bool Success, string ErrorMessage)> AddNewVacationTypeAsync(VacationType vacationType)
+		public async Task<(bool Success, string ErrorMessage)> AddNewVacationTypeAsync(VacationTypeDto vacationTypeDto)
 		{
+			var vacationType = new VacationType
+			{
+				VacationTypeCode = vacationTypeDto.VacationTypeCode.ToUpper(),
+				VacationTypeName = vacationTypeDto.VacationTypeName,
+			};
 			try
 			{
 				await _vacationTypesRepository.AddAsync(vacationType);
@@ -71,7 +76,7 @@ namespace EmployeesManagementSystem.Application.Services
 				return (false, "no enough vacation days");
 			}
 			var approvedState = await _unitOfWork.vacationRepository.GetRequestStateByNameAsync("Approved");
-			request.RequestState= approvedState;
+			request.RequestState = approvedState;
 			request.ApprovedByEmployeeNumber = reviwer.EmployeeNumber;
 			//TODO:		Create method to update vacation days balance after approve any vacation request
 			//which the logic of this method is to decrease employee vacation days left.
@@ -103,7 +108,7 @@ namespace EmployeesManagementSystem.Application.Services
 				return (false, "Can not approve if the employee is not your subordante");
 			}
 			var declinedState = await _unitOfWork.vacationRepository.GetRequestStateByNameAsync("Declined");
-			request.RequestState= declinedState;
+			request.RequestState = declinedState;
 			request.DeclinedByEmployeeNumber = reviwer.EmployeeNumber;
 			await _unitOfWork.vacationRepository.UpdateAsync(request);
 			await _unitOfWork.SaveChangesAsync();

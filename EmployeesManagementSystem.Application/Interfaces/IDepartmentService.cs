@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Domain.Models;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace EmployeesManagementSystem.Application.Interfaces
 	public interface IDepartmentService
 	{
 		Task<(bool Success, string ErrorMessage)> SeedDepartmentsAsync(IEnumerable<Department> departments);
-		Task<(bool Success, string ErrorMessage)> AddNewDepartmentAsync(Department department);
+		Task<(bool Success, string ErrorMessage)> AddNewDepartmentAsync(DepartmentDto departmentDto);
 		Task<IEnumerable<Department>> GetAllDepartmentsAsync();
 	}
 }

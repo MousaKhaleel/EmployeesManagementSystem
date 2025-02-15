@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Application.Interfaces;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Application.Interfaces;
 using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
 using System;
@@ -20,8 +21,12 @@ namespace EmployeesManagementSystem.Application.Services
 			_unitOfWork = unitOfWork;
 		}
 
-		public async Task<(bool Success, string ErrorMessage)> AddNewDepartmentAsync(Department department)
+		public async Task<(bool Success, string ErrorMessage)> AddNewDepartmentAsync(DepartmentDto departmentDto)
 		{
+			var department = new Department
+			{
+				DepartmentName = departmentDto.DepartmentName
+			};
 			try
 			{
 				await _departmentsRepository.AddAsync(department);

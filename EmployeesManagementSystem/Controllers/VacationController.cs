@@ -23,53 +23,88 @@ namespace EmployeesManagementSystem.Api.Controllers
 		[HttpPost("SubmitVacationRequest")]
 		public async Task<IActionResult> SubmitVacationRequest(NewVacationRequestDto newVacationRequestDto)
 		{
-			var isOverlapping = await _vacationService.IsVacationOverlappingAsync(newVacationRequestDto.EmployeeNumber, newVacationRequestDto.StartDate, newVacationRequestDto.EndDate);
-			if (isOverlapping)
+			try
 			{
-				return BadRequest("Vacation request overlaps with an existing request");
-			}
+				var isOverlapping = await _vacationService.IsVacationOverlappingAsync(newVacationRequestDto.EmployeeNumber, newVacationRequestDto.StartDate, newVacationRequestDto.EndDate);
+				if (isOverlapping)
+				{
+					return BadRequest("Vacation request overlaps with an existing request");
+				}
 
-			var result = await _vacationService.SubmitVacationRequestAsync(newVacationRequestDto);
-			if (result)
-			{
-				return Ok("Vacation request submitted successfully");
+				var result = await _vacationService.SubmitVacationRequestAsync(newVacationRequestDto);
+				if (result)
+				{
+					return Ok("Vacation request submitted successfully");
+				}
+				return StatusCode(500, "Failed to submit vacation request");
 			}
-			return StatusCode(500, "Failed to submit vacation request");
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpGet("GetAllPendingVacationRequests")]
 		public async Task<IActionResult> GetPendingVacationRequests()
 		{
-			var pendingRequests = await _vacationService.GetAllPendingVacationRequestsAsync();
-			return Ok(pendingRequests);
+			try
+			{
+				var pendingRequests = await _vacationService.GetAllPendingVacationRequestsAsync();
+				return Ok(pendingRequests);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 		[HttpGet("GetPendingVacationRequestsForSubordinates/{managerEmpNum}")]
 		public async Task<IActionResult> GetPendingVacationRequestsForSubordinatesAsync(string managerEmpNum)
 		{
-			var pendingRequests = await _vacationService.GetPendingVacationRequestsForSubordinatesAsync(managerEmpNum);
-			return Ok(pendingRequests);
+			try
+			{
+				var pendingRequests = await _vacationService.GetPendingVacationRequestsForSubordinatesAsync(managerEmpNum);
+				return Ok(pendingRequests);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("Approve/{requestId}")]
 		public async Task<IActionResult> ApproveVacationRequest(int requestId)
 		{
-			var result = await _vacationService.ApproveVacationRequestAsync(requestId);
-			if (!result.Success)
+			try
 			{
-				return BadRequest(result.ErrorMessage);
+				var result = await _vacationService.ApproveVacationRequestAsync(requestId);
+				if (!result.Success)
+				{
+					return BadRequest(result.ErrorMessage);
+				}
+				return Ok("Vacation request approved");
 			}
-			return Ok("Vacation request approved");
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("Decline/{requestId}")]
 		public async Task<IActionResult> DeclineVacationRequest(int requestId)
 		{
-			var result = await _vacationService.DeclineVacationRequestAsync(requestId);
-			if (!result.Success)
+			try
 			{
-				return Ok("Vacation request declined");
+				var result = await _vacationService.DeclineVacationRequestAsync(requestId);
+				if (!result.Success)
+				{
+					return Ok("Vacation request declined");
+				}
+				return BadRequest("Failed to decline vacation request");
 			}
-			return BadRequest("Failed to decline vacation request");
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		//[Authorize(Roles = "Admin")]
@@ -101,12 +136,19 @@ namespace EmployeesManagementSystem.Api.Controllers
 				VacationTypeName= "Business Trip"
 				},
 			};
-			var result = await _vacationService.SeedVacationTypesAsync(vacationTypes);
-			if (result.Success)
+			try
 			{
-				return Ok("Vacation types seeded successfully.");
+				var result = await _vacationService.SeedVacationTypesAsync(vacationTypes);
+				if (result.Success)
+				{
+					return Ok("Vacation types seeded successfully.");
+				}
+				return StatusCode(500, $"Failed to seed vacation types: {result.ErrorMessage}");
 			}
-			return StatusCode(500, $"Failed to seed vacation types: {result.ErrorMessage}");
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		//[Authorize(Roles = "Admin")]
@@ -119,19 +161,33 @@ namespace EmployeesManagementSystem.Api.Controllers
 				new RequestState{ StateName = "Approved" },
 				new RequestState{ StateName = "Declined" },
 			};
-			var result = await _vacationService.SeedRequestStatesAsync(requestStates);
-			if (result.Success)
+			try
 			{
-				return Ok("Request states seeded successfully.");
+				var result = await _vacationService.SeedRequestStatesAsync(requestStates);
+				if (result.Success)
+				{
+					return Ok("Request states seeded successfully.");
+				}
+				return StatusCode(500, $"Failed to seed request states: {result.ErrorMessage}");
 			}
-			return StatusCode(500, $"Failed to seed request states: {result.ErrorMessage}");
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpGet("GetAllApprovedRequests")]
 		public async Task<IActionResult> GetAllApprovedRequests()
 		{
-			var approvedRequests = await _vacationService.GetAllApprovedRequestsAsync();
-			return Ok(approvedRequests);
+			try
+			{
+				var approvedRequests = await _vacationService.GetAllApprovedRequestsAsync();
+				return Ok(approvedRequests);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using EmployeesManagementSystem.Application.Interfaces;
+﻿using EmployeesManagementSystem.Application.Dtos;
+using EmployeesManagementSystem.Application.Interfaces;
 using EmployeesManagementSystem.Application.Services;
 using EmployeesManagementSystem.Domain.Interfaces;
 using EmployeesManagementSystem.Domain.Models;
@@ -10,9 +11,9 @@ namespace EmployeesManagementSystem.Api.Controllers
 {
 	[Authorize(Roles = "Admin")]
 	[Route("api/[controller]")]
-    [ApiController]
-    public class AdminController : ControllerBase
-    {
+	[ApiController]
+	public class AdminController : ControllerBase
+	{
 		private readonly IPositionService _positionService;
 		private readonly IDepartmentService _departmentService;
 		private readonly IVacationService _vacationService;
@@ -27,53 +28,89 @@ namespace EmployeesManagementSystem.Api.Controllers
 		}
 
 		[HttpPost("AddPosition")]
-		public async Task<IActionResult> AddPositionAsync(Position position)
+		public async Task<IActionResult> AddPositionAsync(PositionDto positionDto)
 		{
-			var result = await _positionService.AddNewPositionAsync(position);
-			if (result.Success)
+			//if (!ModelState.IsValid)
+			//{
+			//	return BadRequest(ModelState);
+			//}
+			try
 			{
-				return Ok("Success");
+				var result = await _positionService.AddNewPositionAsync(positionDto);
+				if (result.Success)
+				{
+					return Ok("Position added successfully.");
+				}
+				else
+				{
+					throw new Exception($"Failed to add: {result.ErrorMessage}");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				throw new Exception($"Failed to add: {result.ErrorMessage}");
+				return BadRequest(ex.Message);
 			}
 		}
 
 		[HttpPost("AddDepartment")]
-		public async Task<IActionResult> AddDepartmentAsync(Department department)
+		public async Task<IActionResult> AddDepartmentAsync(DepartmentDto departmentDto)
 		{
-			var result = await _departmentService.AddNewDepartmentAsync(department);
-			if (result.Success)
+			//if (!ModelState.IsValid)
+			//{
+			//	return BadRequest(ModelState);
+			//}
+			try
 			{
-				return Ok("Success");
+				var result = await _departmentService.AddNewDepartmentAsync(departmentDto);
+				if (result.Success)
+				{
+					return Ok("Department added successfully.");
+				}
+				else
+				{
+					throw new Exception($"Failed to add: {result.ErrorMessage}");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				throw new Exception($"Failed to add: {result.ErrorMessage}");
+				return BadRequest(ex.Message);
 			}
 		}
 
-		[HttpPost("AddVacationTypes")]
-		public async Task<IActionResult> SeedVacationTypesAsync(VacationType vacationType)
+		[HttpPost("AddVacationType")]
+		public async Task<IActionResult> AddVacationTypeAsync(VacationTypeDto vacationTypeDto)
 		{
-			var result = await _vacationService.AddNewVacationTypeAsync(vacationType);
-			if (result.Success)
+			try
 			{
-				return Ok("add successfully.");
+				var result = await _vacationService.AddNewVacationTypeAsync(vacationTypeDto);
+				if (result.Success)
+				{
+					return Ok("Added successfully.");
+				}
+				return StatusCode(500, $"Failed to add: {result.ErrorMessage}");
 			}
-			return StatusCode(500, $"Failed to add: {result.ErrorMessage}");
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("AssignSubordinate")]
 		public async Task<IActionResult> AssignSubordinate(string supervisor, string subordinate)
 		{
-			var result = await _employeeService.AssignSubordinateToSupervisorAsync(supervisor, subordinate);
-			if (result.Success)
+			try
 			{
-				return Ok("Assigned successfully.");
+				var result = await _employeeService.AssignSubordinateToSupervisorAsync(supervisor, subordinate);
+				if (result.Success)
+				{
+					return Ok("Assigned successfully.");
+				}
+				return StatusCode(500, $"Failed to add: {result.ErrorMessage}");
 			}
-			return StatusCode(500, $"Failed to add: {result.ErrorMessage}");
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }
