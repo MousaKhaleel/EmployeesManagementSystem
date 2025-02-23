@@ -13,6 +13,7 @@ namespace EmployeesManagementSystem.Application.Interfaces
 		Task<IEnumerable<Employee>> GetAllEmployeesAsync();
 		Task<EmployeeDto> GetEmployeeByNumberAsync(string empNum);
 		Task<(bool Success, string ErrorMessage)> UpdateEmployeeInfoAsync(string empNum, EmployeeUpdateDto employeeUpdateDto);
+		Task<(bool Success, string ErrorMessage)> UpdateEmployeeVacationDaysAsync(string empNum, int days);
 		Task<IEnumerable<Employee>> GetEmployeesWithPendingVacationRequestsAsync(); //TODO: Dto
 		Task<(bool Success, string ErrorMessage)> SeedEmployeesAsync(IEnumerable<Employee> employees);
 		Task<IEnumerable<ApprovedVacationDto>> GetEmployeeApprovedVacationRequestsHistoryAsync(string empNum);

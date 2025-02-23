@@ -140,6 +140,11 @@ namespace EmployeesManagementSystem.Application.Services
 		{
 			var employee = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(empNum);
 
+			if (employee == null)
+			{
+				return (false, "Employee not found.");
+			}
+
 			var newDepartment = await _departmentRepository.GetByIdAsync(employeeUpdateDto.DepartmentId);
 			var newPosition = await _positionRepository.GetByIdAsync(employeeUpdateDto.PositionId);
 			var newManager = await _unitOfWork.employeeRepository.GetEmployeeByNumberAsync(employeeUpdateDto.ReportedToEmployeeNumber);
@@ -163,6 +168,12 @@ namespace EmployeesManagementSystem.Application.Services
 			}
 
 			return (true, null);
+		}
+
+		//TODO:
+		public Task<(bool Success, string ErrorMessage)> UpdateEmployeeVacationDaysAsync(string empNum, int days)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
