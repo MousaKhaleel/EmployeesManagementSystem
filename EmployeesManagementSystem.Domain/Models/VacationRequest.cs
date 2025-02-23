@@ -15,6 +15,7 @@ namespace EmployeesManagementSystem.Domain.Models
 		public int RequestId { get; set; }
 
 		[Required]
+		[DataType(DataType.Date)]
 		public DateTime RequestSubmissionDate { get; set; }
 
 		[Required, MaxLength(100)]
@@ -32,10 +33,12 @@ namespace EmployeesManagementSystem.Domain.Models
 
 		[Required]
 		[Column(TypeName = "date")]
+		[DataType(DataType.Date)]
 		public DateTime StartDate { get; set; }
 
 		[Required]
 		[Column(TypeName = "date")]
+		[DataType(DataType.Date)]
 		public DateTime EndDate { get; set; }
 
 		[Required]

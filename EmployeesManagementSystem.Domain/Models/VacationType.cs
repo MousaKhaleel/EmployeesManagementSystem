@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 
 namespace EmployeesManagementSystem.Domain.Models
 {
+	//TODO: integrate
+	public enum VacationRequestState
+	{
+		Pending,
+		Approved,
+		Declined,
+		Cancelled
+	}
+
 	public class VacationType
 	{
 		[Key, MaxLength(1)]

@@ -98,6 +98,29 @@ namespace EmployeesManagementSystem.Api.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+		//TODO:
+		[HttpPut("UpdateVacationDays/{empNum}")]
+		public async Task<IActionResult> UpdateVacationDays(string empNum, int days)
+		{
+			//if (!ModelState.IsValid)
+			//{
+			//	return BadRequest(ModelState);
+			//}
+			try
+			{
+				var result = await _employeeService.UpdateEmployeeVacationDaysAsync(empNum, days);
+				if (!result.Success)
+				{
+					return BadRequest(result.ErrorMessage);
+				}
+
+				return Ok("Updated successfully");
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 
 		[HttpGet("GetEmployeesWithPendingVacationRequests")]
 		public async Task<IActionResult> GetEmployeesWithPendingVacationRequests()
